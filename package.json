@@ -4,6 +4,9 @@
   "private": true,
   "description": "Sổ Lưu Bút — Dương \"Domino\" — a live, editable farewell keepsake book (Vercel + Neon + Vercel Blob).",
   "type": "commonjs",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "vercel dev",
     "migrate": "node scripts/migrate.js"
