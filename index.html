@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sổ Lưu Bút — Dương "Domino"</title>
+  <meta name="description" content="Sổ lưu bút tạm biệt cho Dương Domino — 6 năm, một gia đình thứ hai. 🚀">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main class="stage">
+    <div class="ambient"></div>
+
+    <!-- ===================== BOOK INTERIOR ===================== -->
+    <div class="book" id="book" aria-label="Sổ lưu bút">
+      <div class="spread">
+        <div class="spine"></div>
+
+        <!-- LEFT PAGE -->
+        <section class="page-left" aria-label="Bìa trong">
+          <button class="gear" id="gear" type="button" title="Đổi mật khẩu" aria-label="Đổi mật khẩu" hidden>⚙️</button>
+
+          <div class="kicker">Sổ Lưu Bút &middot; 2026</div>
+          <h1 class="title">Dương "Domino" <span class="title__emoji">🚀</span></h1>
+
+          <p class="intro">6 năm, không biết bao nhiêu chuyến đi, và một gia đình thứ hai. Đây là những lời nhắn từ những người thương anh. Go Rockets, đi mạnh giỏi. 🚀</p>
+
+          <div class="admin-bar" id="admin-bar">
+            <button class="admin-bar__btn" id="btn-unlock" type="button" hidden>🔑 Mở khóa</button>
+            <button class="admin-bar__btn admin-bar__btn--accent" id="btn-add" type="button" hidden>＋ Thêm</button>
+            <button class="admin-bar__btn admin-bar__btn--ghost" id="btn-lock" type="button" hidden>🔓 Khóa lại</button>
+          </div>
+
+          <div class="page-meta">
+            <div class="page-num">Trang <span id="page-label">1</span> / <span id="total-label">0</span></div>
+            <div class="dots" id="dots"></div>
+          </div>
+
+          <div class="logo-frame">
+            <img class="logo-mark" src="assets/logo.png" alt="University of Toledo Rockets logo" width="40" height="40">
+          </div>
+        </section>
+
+        <!-- RIGHT PAGE: flipping leaf -->
+        <section class="page-right" aria-label="Lời nhắn">
+          <article class="leaf" id="leaf">
+            <div class="empty-state" id="empty-state" hidden>
+              <div class="empty-state__icon">💌</div>
+              <div class="empty-state__title">Chưa có lời nhắn nào</div>
+              <p class="empty-state__desc">Khi có lời nhắn, chúng sẽ xuất hiện ở đây.</p>
+              <button class="btn-primary" id="empty-state-add" type="button" hidden>＋ Thêm lời nhắn ✍️</button>
+            </div>
+
+            <div class="leaf-content" id="leaf-content" hidden>
+              <div class="tape" id="tape"></div>
+
+              <button class="privacy-pill is-public" id="privacy-pill" type="button" tabindex="-1">🌍 Công khai</button>
+
+              <div class="date-stamp" id="date-stamp" hidden></div>
+
+              <div class="photo-strip" id="photo-strip" hidden></div>
+
+              <div class="message-block" id="message-block">
+                <div class="message" id="message-text"></div>
+                <div class="message-name" id="message-name"></div>
+              </div>
+
+              <div class="entry-controls" id="entry-controls" hidden>
+                <button class="entry-controls__btn" id="btn-edit-entry" type="button">✏️ Sửa</button>
+                <button class="entry-controls__btn entry-controls__btn--danger" id="btn-delete-entry" type="button">🗑️ Xóa</button>
+              </div>
+            </div>
+
+            <div class="leaf-shadow" id="leaf-shadow"></div>
+          </article>
+
+          <div class="under-shadow" id="under-shadow"></div>
+        </section>
+      </div>
+
+      <nav class="nav" aria-label="Điều hướng trang">
+        <button class="nav-btn" id="btn-prev" type="button">‹ Trước</button>
+        <button class="nav-btn" id="btn-next" type="button">Tiếp ›</button>
+      </nav>
+
+      <!-- PASSWORD MODAL -->
+      <div class="modal-scrim" id="modal-scrim" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+          <div class="modal__title" id="modal-title"></div>
+          <input class="modal__input" id="modal-input" type="password" placeholder="Mật khẩu" autocomplete="current-password">
+          <div id="modal-new-row" hidden>
+            <input class="modal__input" id="modal-new-input" type="password" placeholder="Mật khẩu mới" autocomplete="new-password">
+          </div>
+          <div class="modal__error" id="modal-error" hidden></div>
+          <div class="modal__actions">
+            <button class="btn-ghost" id="modal-cancel" type="button">Hủy</button>
+            <button class="btn-primary" id="modal-submit" type="button">Xác nhận</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- LIGHTBOX (photo viewer) -->
+      <dialog class="lightbox" id="lightbox">
+        <button class="lightbox__close" id="lightbox-close" type="button" aria-label="Đóng">✕</button>
+        <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" type="button" aria-label="Ảnh trước">‹</button>
+        <img class="lightbox__img" id="lightbox-img" alt="">
+        <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" type="button" aria-label="Ảnh sau">›</button>
+        <div class="lightbox__counter" id="lightbox-counter"></div>
+      </dialog>
+
+      <!-- EDITOR (add / edit message) -->
+      <div class="editor-scrim" id="editor-scrim" hidden>
+        <div class="editor" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+          <div class="editor__title" id="editor-title">Thêm lời nhắn</div>
+
+          <label class="editor__field">
+            <span>Người gửi</span>
+            <input class="editor__input" id="editor-sender" type="text" maxlength="80" placeholder="Tên người gửi">
+          </label>
+
+          <label class="editor__field">
+            <span>Ngày</span>
+            <input class="editor__input" id="editor-date" type="date">
+          </label>
+
+          <label class="editor__field">
+            <span>Lời nhắn</span>
+            <textarea class="editor__textarea" id="editor-message" maxlength="4000" rows="5" placeholder="Viết lời nhắn..."></textarea>
+          </label>
+
+          <label class="editor__checkbox">
+            <input type="checkbox" id="editor-private">
+            <span>🔒 Riêng tư (chỉ Dương thấy)</span>
+          </label>
+
+          <div class="editor__photos">
+            <span class="editor__photos-label">Ảnh (tối đa 5)</span>
+            <div class="editor__photo-grid" id="editor-photo-grid"></div>
+            <div class="editor__photo-status" id="editor-photo-status" hidden></div>
+            <input type="file" id="editor-photo-input" accept="image/*" multiple hidden>
+          </div>
+
+          <div class="editor__error" id="editor-error" hidden></div>
+          <div class="editor__actions">
+            <button class="btn-danger" id="editor-delete" type="button" hidden>Xóa</button>
+            <button class="btn-ghost" id="editor-cancel" type="button">Hủy</button>
+            <button class="btn-primary" id="editor-save" type="button">Lưu</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================== COVER ===================== -->
+    <div class="cover-wrap" id="cover-wrap">
+      <div class="cover-flip" id="cover-flip">
+        <div class="cover">
+          <div class="cover__tape cover__tape--left"></div>
+          <div class="cover__tape cover__tape--right"></div>
+          <div class="cover__ribbon"></div>
+
+          <div class="cover__rockets">🚀 Go Rockets 🚀</div>
+          <div class="cover__heading">SỔ LƯU BÚT</div>
+          <div class="cover__name">Dương "Domino"</div>
+          <div class="cover__sub">6 năm &middot; 2020 – 2026 &middot; Gia đình thật sự</div>
+
+          <button class="cover__open" id="btn-open" type="button">Mở sổ ra ✨</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/lightbox.js"></script>
+  <script src="js/editor.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

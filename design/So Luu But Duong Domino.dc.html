@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; }
+    a { color: oklch(45% 0.14 30); }
+    a:hover { color: oklch(38% 0.16 30); }
+    @keyframes domino-float {
+      0%, 100% { transform: translateY(0deg); }
+      50% { transform: translateY(-6px); }
+    }
+    @keyframes domino-sparkle {
+      0%, 100% { opacity: 0.55; transform: scale(1) rotate(0deg); }
+      50% { opacity: 1; transform: scale(1.15) rotate(8deg); }
+    }
+  </style>
+  <x-import component-from-global-scope="image-slot" from="./image-slot.js" hint-size="0,0"></x-import>
+</helmet>
+
+<div style="position:relative;width:100%;height:100vh;min-height:640px;overflow:hidden;background:radial-gradient(ellipse 90% 70% at 50% 15%, oklch(93% 0.02 70), oklch(88% 0.03 55) 60%, oklch(80% 0.045 45) 100%);font-family:'Be Vietnam Pro',sans-serif;display:flex;align-items:center;justify-content:center;">
+
+  <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 85%, oklch(85% 0.05 50 / 0.5), transparent 40%), radial-gradient(circle at 85% 20%, oklch(90% 0.04 60 / 0.4), transparent 35%);"></div>
+
+  <!-- ===================== BOOK INTERIOR ===================== -->
+  <div style="position:relative;width:min(94vw,980px);height:min(80vh,620px);opacity:{{ bookOpacity }};pointer-events:{{ bookPointerEvents }};transition:opacity 0.6s ease 0.25s;display:flex;flex-direction:column;gap:14px;">
+    <div style="position:relative;width:100%;flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;background:oklch(96% 0.012 60);border-radius:10px;box-shadow:0 30px 60px -20px oklch(20% 0.03 40 / 0.45), 0 2px 0 oklch(75% 0.03 50 / 0.6) inset;overflow:hidden;">
+
+      <div style="position:absolute;left:50%;top:0;bottom:0;width:26px;margin-left:-13px;background:linear-gradient(90deg, transparent, oklch(30% 0.03 40 / 0.18), oklch(30% 0.03 40 / 0.18), transparent);pointer-events:none;z-index:5;"></div>
+
+      <!-- LEFT PAGE -->
+      <div style="position:relative;padding:34px 30px 30px 40px;display:flex;flex-direction:column;background:oklch(94% 0.015 65);border-right:1px solid oklch(80% 0.02 55);">
+        <button onClick="{{ openChangePassword }}" title="Đổi mật khẩu" style="position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;border:1px solid oklch(70% 0.03 50);background:oklch(97% 0.01 60);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;">⚙️</button>
+
+        <div style="font-family:'Playfair Display',serif;font-size:15px;letter-spacing:0.12em;text-transform:uppercase;color:oklch(45% 0.05 40);margin-bottom:4px;">Sổ Lưu Bút &middot; 2026</div>
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:26px;color:oklch(32% 0.05 35);margin-bottom:18px;">Dương "Domino" <span style="font-size:18px;">🚀</span></div>
+
+        <div style="font-size:13px;color:oklch(48% 0.03 40);line-height:1.6;margin-bottom:22px;">6 năm, không biết bao nhiêu chuyến đi, và một gia đình thứ hai. Đây là những lời nhắn từ những người thương ông. Go Rockets, đi mạnh giỏi. 🚀</div>
+
+        <div style="margin-top:auto;">
+          <div style="font-family:'Playfair Display',serif;font-size:13px;color:oklch(45% 0.04 40);margin-bottom:10px;">Trang {{ pageLabel }} / {{ totalLabel }}</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;">
+            <sc-for list="{{ dots }}" as="dot" hint-placeholder-count="6">
+              <div onClick="{{ dot.onClick }}" style="{{ dot.style }}"></div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="position:absolute;bottom:24px;right:26px;width:46px;height:46px;">
+          <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="ut-rockets-logo" shape="circle" placeholder="UT logo" style="width:100%;height:100%;" hint-size="46,46"></x-import>
+        </div>
+      </div>
+
+      <!-- RIGHT PAGE: flipping (single leaf, swings around its own spine) -->
+      <div style="position:relative;padding:0;background:oklch(97% 0.012 62);overflow:hidden;perspective:1900px;">
+        <div style="position:absolute;inset:0;transform-origin:left center;transform:{{ flipTransform }};transition:{{ flipTransition }};padding:30px 34px 26px 26px;box-sizing:border-box;background-color:oklch(97% 0.012 62);background-image:repeating-linear-gradient(to bottom, transparent 0 30px, oklch(80% 0.02 60 / 0.5) 30px 31px);box-shadow:{{ flipPageShadow }};">
+
+          <div style="{{ page.tapeStyle }}"></div>
+
+          <button onClick="{{ page.togglePrivacy }}" style="{{ page.privacyPillStyle }}">{{ page.privacyLabel }}</button>
+
+          <div style="position:absolute;top:14px;right:20px;font-family:'Caveat',cursive;font-size:17px;color:oklch(50% 0.05 40);border:1.5px solid oklch(55% 0.08 40 / 0.5);border-radius:4px;padding:2px 8px;transform:rotate(3deg);">{{ page.date }}</div>
+
+          <div style="width:118px;height:118px;position:relative;margin:36px 0 10px 4px;padding:8px 8px 22px 8px;background:white;box-shadow:0 4px 10px oklch(30% 0.03 40 / 0.25);transform:rotate(-3deg);">
+            <x-import component-from-global-scope="image-slot" from="./image-slot.js" id="{{ page.photoSlotId }}" shape="rect" placeholder="dán ảnh ở đây 📸" style="width:100%;height:100%;" hint-size="102,88"></x-import>
+          </div>
+
+          <sc-if value="{{ page.showLockOverlay }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;inset:16px;top:46px;background:oklch(93% 0.015 60 / 0.94);border-radius:6px;border:2px dashed oklch(55% 0.1 30 / 0.6);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px;z-index:20;">
+              <div style="font-size:26px;">🔒</div>
+              <div style="font-family:'Playfair Display',serif;font-weight:600;color:oklch(38% 0.06 30);font-size:15px;">Riêng tư — chỉ Dương thấy</div>
+              <button onClick="{{ page.requestReveal }}" style="font-family:'Be Vietnam Pro',sans-serif;font-weight:600;font-size:13px;color:oklch(97% 0.01 60);background:oklch(48% 0.1 28);border:none;border-radius:20px;padding:8px 16px;cursor:pointer;">Nhập mật khẩu 🔑</button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ page.showMessage }}" hint-placeholder-val="{{ true }}">
+            <div style="font-family:'Caveat',cursive;font-size:21px;line-height:1.5;color:oklch(28% 0.04 35);max-height:150px;overflow:auto;padding-right:4px;">{{ page.message }}</div>
+            <div style="margin-top:10px;text-align:right;font-family:'Caveat',cursive;font-size:22px;font-weight:600;color:oklch(38% 0.08 30);">— {{ page.name }}</div>
+          </sc-if>
+
+          <div style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg, oklch(15% 0.02 40 / 0.55), transparent 60%);opacity:{{ flipShadowOpacity }};"></div>
+        </div>
+
+        <!-- ambient shadow cast onto the page underneath while the leaf is lifted -->
+        <div style="position:absolute;inset:0;pointer-events:none;background:oklch(15% 0.02 40 / 0.25);opacity:{{ flipUnderShadowOpacity }};transition:{{ flipTransition }};"></div>
+      </div>
+    </div>
+
+    <div style="flex-shrink:0;display:flex;justify-content:center;gap:14px;">
+      <button onClick="{{ prev }}" disabled="{{ isFirst }}" style="{{ navBtnStyle }}">‹ Trước</button>
+      <button onClick="{{ next }}" disabled="{{ isLast }}" style="{{ navBtnStyle }}">Tiếp ›</button>
+    </div>
+
+    <!-- PASSWORD MODAL -->
+    <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:absolute;inset:0;background:oklch(20% 0.02 40 / 0.55);z-index:60;display:flex;align-items:center;justify-content:center;">
+        <div style="background:oklch(97% 0.012 62);border-radius:12px;padding:26px 24px;width:280px;box-shadow:0 20px 50px oklch(20% 0.05 30 / 0.4);display:flex;flex-direction:column;gap:12px;">
+          <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:17px;color:oklch(32% 0.05 35);">{{ modalTitle }}</div>
+          <input type="password" value="{{ modalInput }}" onChange="{{ onModalInputChange }}" placeholder="Mật khẩu hiện tại" style="font-family:'Be Vietnam Pro',sans-serif;font-size:14px;padding:9px 12px;border:1px solid oklch(75% 0.03 50);border-radius:8px;outline:none;box-sizing:border-box;">
+          <sc-if value="{{ modalIsChangePw }}" hint-placeholder-val="{{ false }}">
+            <input type="password" value="{{ modalNewInput }}" onChange="{{ onModalNewInputChange }}" placeholder="Mật khẩu mới" style="font-family:'Be Vietnam Pro',sans-serif;font-size:14px;padding:9px 12px;border:1px solid oklch(75% 0.03 50);border-radius:8px;outline:none;box-sizing:border-box;">
+          </sc-if>
+          <sc-if value="{{ modalHasError }}" hint-placeholder-val="{{ false }}">
+            <div style="color:oklch(50% 0.15 25);font-size:12px;font-family:'Be Vietnam Pro',sans-serif;">{{ modalError }}</div>
+          </sc-if>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px;">
+            <button onClick="{{ closeModal }}" style="font-family:'Be Vietnam Pro',sans-serif;font-weight:600;font-size:13px;color:oklch(40% 0.03 40);background:oklch(92% 0.01 55);border:none;border-radius:16px;padding:8px 16px;cursor:pointer;">Hủy</button>
+            <button onClick="{{ submitModal }}" style="font-family:'Be Vietnam Pro',sans-serif;font-weight:600;font-size:13px;color:oklch(97% 0.01 60);background:oklch(48% 0.1 28);border:none;border-radius:16px;padding:8px 16px;cursor:pointer;">Xác nhận</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ===================== COVER ===================== -->
+  <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:{{ coverPointerEvents }};perspective:2400px;">
+    <div style="width:min(94vw,980px);height:min(84vh,660px);transform:{{ coverTransform }};transform-origin:left center;transition:transform 1s cubic-bezier(.5,0,.2,1);transform-style:preserve-3d;">
+      <div style="position:relative;width:100%;height:100%;border-radius:10px;background:linear-gradient(160deg, oklch(52% 0.09 32), oklch(42% 0.09 28) 55%, oklch(36% 0.08 26));box-shadow:0 40px 80px -20px oklch(20% 0.05 30 / 0.55), inset 0 0 0 6px oklch(60% 0.1 35 / 0.35);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;overflow:hidden;backface-visibility:hidden;">
+
+        <div style="position:absolute;top:-10px;left:24px;width:90px;height:34px;background:oklch(90% 0.04 85 / 0.55);transform:rotate(-8deg);box-shadow:0 2px 6px oklch(20% 0.05 30 / 0.3);"></div>
+        <div style="position:absolute;top:-10px;right:30px;width:90px;height:34px;background:oklch(90% 0.04 85 / 0.55);transform:rotate(7deg);box-shadow:0 2px 6px oklch(20% 0.05 30 / 0.3);"></div>
+
+        <div style="position:absolute;top:0;right:64px;width:34px;height:150px;background:oklch(70% 0.15 35);clip-path:polygon(0 0, 100% 0, 100% 100%, 50% 82%, 0 100%);box-shadow:0 4px 10px oklch(20% 0.05 30 / 0.3);"></div>
+
+        <div style="font-family:'Caveat',cursive;font-weight:600;font-size:22px;color:oklch(88% 0.05 75);letter-spacing:0.04em;animation:domino-sparkle 3s ease-in-out infinite;">🚀 Go Rockets 🚀</div>
+
+        <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(38px,6vw,58px);color:oklch(96% 0.02 70);text-align:center;letter-spacing:0.02em;text-shadow:0 3px 10px oklch(15% 0.03 30 / 0.4);">SỔ LƯU BÚT</div>
+
+        <div style="font-family:'Caveat',cursive;font-weight:700;font-size:clamp(28px,4vw,40px);color:oklch(88% 0.06 60);">Dương "Domino"</div>
+
+        <div style="font-family:'Be Vietnam Pro',sans-serif;font-size:14px;letter-spacing:0.15em;text-transform:uppercase;color:oklch(80% 0.04 60 / 0.85);">6 năm &middot; 2020 – 2026 &middot; Gia đình thật sự</div>
+
+        <button onClick="{{ openBook }}" style="margin-top:14px;font-family:'Be Vietnam Pro',sans-serif;font-weight:600;font-size:16px;color:oklch(35% 0.06 30);background:oklch(94% 0.02 70);border:none;border-radius:30px;padding:14px 34px;cursor:pointer;box-shadow:0 8px 20px oklch(20% 0.05 30 / 0.35);animation:domino-float 2.6s ease-in-out infinite;">Mở sổ ra ✨</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ENTRIES = [
+  {
+    id: 'e1', name: 'Bạn A', date: '01.2026', isPrivate: false,
+    message: 'Nhớ vụ tụi mình lạc đường ở Đà Lạt lúc 2 giờ sáng không? 😂 Domino ơi, đi đâu cũng đừng để GPS dẫn đường nha. Về VN nhớ giữ liên lạc, tụi mình mãi là gia đình. 🚀'
+  },
+  {
+    id: 'e2', name: 'Bạn B', date: '02.2026', isPrivate: false,
+    message: 'Roast nhẹ: ông là người duy nhất tao biết ngủ được trong lúc đang video call. Compliment nặng: ông cũng là người duy nhất luôn có mặt lúc tao cần nhất. Go Rockets, đi mạnh giỏi nha! 🎉'
+  },
+  {
+    id: 'e3', name: 'Bạn C', date: '02.2026', isPrivate: true,
+    message: '[Mẫu — chỗ này để dành cho những lời nhắn riêng tư mà bạn bè không muốn công khai. Sau này thay bằng nội dung thật nha.] 🔒'
+  },
+  {
+    id: 'e4', name: 'Sarah', date: '03.2026', isPrivate: false,
+    message: "10-year prophecy: you'll come back to Ohio in a private jet, still wearing the same hoodie. 😂 Real talk though — thank you for six years of chaos and comfort. See you on the other side of the world, Domino. 💫"
+  },
+  {
+    id: 'e5', name: 'Bạn D', date: '03.2026', isPrivate: true,
+    message: 'Riêng tư — đọc lúc nào buồn thì đọc nha. [Mẫu placeholder, thay nội dung thật sau nhé.] 💌'
+  },
+  {
+    id: 'e6', name: 'Bạn E', date: '04.2026', isPrivate: false,
+    message: '10 năm nữa nếu giàu thì nhớ… bao tụi tao ăn phở nha 🍜. Thương ông nhiều, đi giữ sức khỏe!'
+  }
+];
+
+const TAPE_COLORS = [
+  'oklch(78% 0.09 45 / 0.55)',
+  'oklch(80% 0.08 90 / 0.55)',
+  'oklch(75% 0.1 25 / 0.5)'
+];
+
+const PW_KEY = 'sluubut_duong_password';
+const PHASE_MS = 260;
+
+class Component extends DCLogic {
+  state = {
+    opened: false,
+    index: 0,
+    turning: false,
+    phase: 'idle',
+    direction: 'next',
+    revealed: {},
+    entries: ENTRIES.map(e => ({ ...e })),
+    password: (typeof localStorage !== 'undefined' && localStorage.getItem(PW_KEY)) || 'DuongDomino',
+    modal: null
+  };
+
+  openBook = () => this.setState({ opened: true });
+
+  next = () => {
+    const { turning, index, entries } = this.state;
+    if (turning || index >= entries.length - 1) return;
+    this.setState({ turning: true, direction: 'next', phase: 'closing' });
+    setTimeout(() => {
+      this.setState(s => ({ index: s.index + 1, phase: 'opening' }));
+      setTimeout(() => this.setState({ turning: false, phase: 'idle' }), PHASE_MS);
+    }, PHASE_MS);
+  };
+
+  prev = () => {
+    const { turning, index } = this.state;
+    if (turning || index <= 0) return;
+    this.setState({ turning: true, direction: 'prev', phase: 'closing' });
+    setTimeout(() => {
+      this.setState(s => ({ index: s.index - 1, phase: 'opening' }));
+      setTimeout(() => this.setState({ turning: false, phase: 'idle' }), PHASE_MS);
+    }, PHASE_MS);
+  };
+
+  jump = (i) => {
+    if (this.state.turning || i === this.state.index) return;
+    this.setState({ index: i });
+  };
+
+  requestReveal = (entryId) => {
+    this.setState({ modal: { mode: 'reveal', entryId, input: '', newInput: '', error: '' } });
+  };
+
+  requestTogglePrivacy = (entryId) => {
+    this.setState({ modal: { mode: 'toggle', entryId, input: '', newInput: '', error: '' } });
+  };
+
+  openChangePassword = () => {
+    this.setState({ modal: { mode: 'changePassword', entryId: null, input: '', newInput: '', error: '' } });
+  };
+
+  closeModal = () => this.setState({ modal: null });
+
+  updateModalInput = (val) => this.setState(s => ({ modal: { ...s.modal, input: val, error: '' } }));
+  updateModalNewInput = (val) => this.setState(s => ({ modal: { ...s.modal, newInput: val, error: '' } }));
+
+  submitModal = () => {
+    const m = this.state.modal;
+    if (!m) return;
+    if (m.input !== this.state.password) {
+      this.setState({ modal: { ...m, error: 'Sai mật khẩu 🙈', input: '' } });
+      return;
+    }
+    if (m.mode === 'reveal') {
+      this.setState(s => ({ revealed: { ...s.revealed, [m.entryId]: true }, modal: null }));
+    } else if (m.mode === 'toggle') {
+      this.setState(s => ({
+        entries: s.entries.map(e => e.id === m.entryId ? { ...e, isPrivate: !e.isPrivate } : e),
+        modal: null
+      }));
+    } else if (m.mode === 'changePassword') {
+      if (!m.newInput || m.newInput.length < 4) {
+        this.setState({ modal: { ...m, error: 'Mật khẩu mới cần ít nhất 4 ký tự' } });
+        return;
+      }
+      if (typeof localStorage !== 'undefined') localStorage.setItem(PW_KEY, m.newInput);
+      this.setState({ password: m.newInput, modal: null });
+    }
+  };
+
+  renderVals() {
+    const { opened, index, turning, phase, direction, entries, modal } = this.state;
+    const entry = entries[index];
+    const isFirst = index === 0;
+    const isLast = index === entries.length - 1;
+    const isRevealed = !entry.isPrivate || !!this.state.revealed[entry.id];
+
+    const page = {
+      id: entry.id,
+      date: entry.date,
+      name: entry.name,
+      message: entry.message,
+      photoSlotId: 'photo-' + entry.id,
+      showLockOverlay: entry.isPrivate && !isRevealed,
+      showMessage: isRevealed,
+      requestReveal: () => this.requestReveal(entry.id),
+      togglePrivacy: () => this.requestTogglePrivacy(entry.id),
+      privacyLabel: entry.isPrivate ? '🔒 Riêng tư' : '🌍 Công khai',
+      privacyPillStyle: `position:absolute;top:14px;left:20px;z-index:30;font-family:"Be Vietnam Pro",sans-serif;font-weight:600;font-size:11px;color:${entry.isPrivate ? 'oklch(45% 0.1 30)' : 'oklch(38% 0.08 150)'};background:${entry.isPrivate ? 'oklch(93% 0.03 40)' : 'oklch(92% 0.03 150)'};border:1px solid ${entry.isPrivate ? 'oklch(70% 0.06 35)' : 'oklch(70% 0.06 150)'};border-radius:10px;padding:3px 9px;cursor:pointer;`,
+      tapeStyle: `position:absolute;top:0;left:36px;width:70px;height:22px;background:${TAPE_COLORS[index % TAPE_COLORS.length]};transform:rotate(-4deg);box-shadow:0 2px 5px oklch(30% 0.03 40 / 0.2);`
+    };
+
+    const dots = entries.map((e, i) => ({
+      id: e.id,
+      onClick: () => this.jump(i),
+      style: `width:9px;height:9px;border-radius:50%;cursor:pointer;background:${i === index ? 'oklch(48% 0.1 28)' : 'oklch(75% 0.03 50)'};transition:background 0.2s;`
+    }));
+
+    const navBtnStyle = 'font-family:"Be Vietnam Pro",sans-serif;font-weight:600;font-size:14px;color:oklch(35% 0.05 35);background:oklch(96% 0.015 60);border:1px solid oklch(75% 0.03 50);border-radius:20px;padding:9px 20px;cursor:pointer;box-shadow:0 4px 10px oklch(30% 0.03 40 / 0.15);';
+
+    const modalTitles = {
+      reveal: 'Nhập mật khẩu để xem 🔒',
+      toggle: 'Nhập mật khẩu để đổi trạng thái',
+      changePassword: 'Đổi mật khẩu'
+    };
+
+    const sign = direction === 'next' ? -1 : 1;
+    let flipTransform = 'rotateY(0deg) scaleY(1)';
+    let flipTransition = 'none';
+    let flipShadowOpacity = 0;
+    let flipUnderShadowOpacity = 0;
+    let flipPageShadow = 'none';
+
+    if (phase === 'closing') {
+      flipTransform = `rotateY(${sign * 92}deg) scaleY(0.985)`;
+      flipTransition = `transform ${PHASE_MS}ms cubic-bezier(.55,0,.85,.35)`;
+      flipShadowOpacity = 1;
+      flipUnderShadowOpacity = 0.6;
+      flipPageShadow = `${sign * -14}px 4px 24px oklch(20% 0.03 40 / 0.35)`;
+    } else if (phase === 'opening') {
+      flipTransform = 'rotateY(0deg) scaleY(1)';
+      flipTransition = `transform ${PHASE_MS}ms cubic-bezier(.15,.65,.45,1)`;
+      flipShadowOpacity = 0;
+      flipUnderShadowOpacity = 0;
+      flipPageShadow = '0 4px 24px oklch(20% 0.03 40 / 0.15)';
+    }
+
+    return {
+      bookOpacity: opened ? 1 : 0,
+      bookPointerEvents: opened ? 'auto' : 'none',
+      coverPointerEvents: opened ? 'none' : 'auto',
+      coverTransform: opened ? 'rotateY(-155deg)' : 'rotateY(0deg)',
+      flipTransform,
+      flipTransition,
+      flipShadowOpacity,
+      flipUnderShadowOpacity,
+      flipPageShadow,
+      pageLabel: index + 1,
+      totalLabel: entries.length,
+      dots,
+      page,
+      isFirst,
+      isLast,
+      navBtnStyle,
+      openBook: this.openBook,
+      next: this.next,
+      prev: this.prev,
+      openChangePassword: this.openChangePassword,
+      modalOpen: !!modal,
+      modalTitle: modal ? modalTitles[modal.mode] : '',
+      modalIsChangePw: !!modal && modal.mode === 'changePassword',
+      modalInput: modal ? modal.input : '',
+      modalNewInput: modal ? modal.newInput : '',
+      modalHasError: !!(modal && modal.error),
+      modalError: modal ? modal.error : '',
+      onModalInputChange: (e) => this.updateModalInput(e.target.value),
+      onModalNewInputChange: (e) => this.updateModalNewInput(e.target.value),
+      closeModal: this.closeModal,
+      submitModal: this.submitModal
+    };
+  }
+}
+
+</script>
+</body>
+</html>
