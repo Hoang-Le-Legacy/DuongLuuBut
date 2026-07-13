@@ -232,17 +232,25 @@ a:hover { color: oklch(38% 0.16 30); }
   transform: rotate(-4deg);
   box-shadow: 0 2px 5px oklch(30% 0.03 40 / 0.2);
 }
-.privacy-pill {
+.badge-row {
   position: absolute;
   top: 14px;
   left: 20px;
   z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(100% - 40px);
+  flex-wrap: wrap;
+}
+.privacy-pill {
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 11px;
   border-radius: 10px;
   padding: 3px 9px;
   cursor: pointer;
+  white-space: nowrap;
 }
 .privacy-pill.is-private {
   color: oklch(45% 0.1 30);
@@ -255,10 +263,6 @@ a:hover { color: oklch(38% 0.16 30); }
   border: 1px solid oklch(70% 0.06 150);
 }
 .contributed-pill {
-  position: absolute;
-  top: 38px;
-  left: 20px;
-  z-index: 30;
   font-family: var(--font-body);
   font-weight: 600;
   font-size: 11px;
@@ -267,6 +271,7 @@ a:hover { color: oklch(38% 0.16 30); }
   border: 1px solid oklch(70% 0.06 35);
   border-radius: 10px;
   padding: 3px 9px;
+  white-space: nowrap;
 }
 .date-stamp {
   position: absolute;
