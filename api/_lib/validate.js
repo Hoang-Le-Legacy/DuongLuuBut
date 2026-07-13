@@ -46,6 +46,16 @@ const unlockInput = z.object({
   password: z.string().min(1).max(200)
 });
 
+// Guest submission via a shared contribute link. No `isPrivate` — the
+// server always forces new contributions private (see api/contribute.js).
+const contributeInput = z.object({
+  token: z.string().min(1).max(200),
+  sender: z.string().trim().min(1).max(80),
+  message: z.string().trim().min(1).max(4000),
+  date: dateField,
+  images: imagesField
+});
+
 const passwordChangeInput = z.object({
   currentPassword: z.string().min(1).max(200),
   newPassword: z.string().min(4).max(200)
@@ -54,7 +64,18 @@ const passwordChangeInput = z.object({
 const ALLOWED_IMAGE_MIME = /^data:image\/(jpeg|jpg|png|webp|gif);base64,/;
 
 const uploadInput = z.object({
-  image: z.string().regex(ALLOWED_IMAGE_MIME, 'unsupported image type')
+  image: z.string().regex(ALLOWED_IMAGE_MIME, 'unsupported image type'),
+  // Present when a guest (no admin bearer token) is uploading via a
+  // contribute link — see api/upload.js and api/contribute.js.
+  contributeToken: z.string().min(1).max(200).optional()
 });
 
-module.exports = { entryInput, entryUpdate, unlockInput, passwordChangeInput, uploadInput, ALLOWED_IMAGE_MIME };
+module.exports = {
+  entryInput,
+  entryUpdate,
+  unlockInput,
+  passwordChangeInput,
+  contributeInput,
+  uploadInput,
+  ALLOWED_IMAGE_MIME
+};

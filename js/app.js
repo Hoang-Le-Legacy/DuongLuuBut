@@ -28,7 +28,8 @@
     entries: [],
     unlocked: API.isUnlockedLocally(),
     loading: true,
-    modal: null           // { mode, error } | null
+    modal: null,           // { mode, error } | null
+    share: null            // { token, loading, error, copied } | null (dialog closed)
   };
 
   let dotEls = [];
@@ -144,6 +145,55 @@
     loadEntries({ preserveIndex: true });
   }
 
+  // ---- share dialog (contribute link management) --------------------------
+  async function openShare() {
+    setState({ share: { token: null, loading: true, error: '', copied: false } });
+    try {
+      const data = await API.getContributeLink();
+      setState((s) => ({ share: { ...s.share, token: data.token, loading: false } }));
+    } catch (err) {
+      setState((s) => ({ share: { ...s.share, loading: false, error: 'Không tải được liên kết — thử lại nhé.' } }));
+    }
+  }
+
+  const closeShare = () => setState({ share: null });
+
+  async function createOrRegenerateLink() {
+    setState((s) => ({ share: { ...s.share, loading: true, error: '', copied: false } }));
+    try {
+      const data = await API.createContributeLink();
+      setState((s) => ({ share: { ...s.share, token: data.token, loading: false } }));
+    } catch (err) {
+      setState((s) => ({ share: { ...s.share, loading: false, error: 'Không tạo được liên kết — thử lại nhé.' } }));
+    }
+  }
+
+  async function revokeLink() {
+    if (!window.confirm('Thu hồi liên kết? Liên kết đang chia sẻ sẽ không dùng được nữa.')) return;
+    setState((s) => ({ share: { ...s.share, loading: true, error: '', copied: false } }));
+    try {
+      await API.revokeContributeLink();
+      setState((s) => ({ share: { ...s.share, token: null, loading: false } }));
+    } catch (err) {
+      setState((s) => ({ share: { ...s.share, loading: false, error: 'Không thu hồi được — thử lại nhé.' } }));
+    }
+  }
+
+  function contributeUrl(token) {
+    return window.location.origin + '/contribute?t=' + token;
+  }
+
+  async function copyLink() {
+    const url = $('share-url').value;
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch (err) {
+      $('share-url').select();
+      document.execCommand('copy');
+    }
+    setState((s) => ({ share: { ...s.share, copied: true } }));
+  }
+
   // ---- edit mode: add / edit / delete --------------------------------------
   function openAddEntry() {
     window.Editor.open(null, {
@@ -217,6 +267,7 @@
     $('gear').hidden = !unlocked;
     $('btn-unlock').hidden = unlocked;
     $('btn-add').hidden = !unlocked;
+    $('btn-share').hidden = !unlocked;
     $('btn-lock').hidden = !unlocked;
 
     // Right leaf — flip mechanics
@@ -264,6 +315,8 @@
       pill.classList.toggle('is-private', entry.isPrivate);
       pill.classList.toggle('is-public', !entry.isPrivate);
 
+      $('contributed-pill').hidden = !(unlocked && entry.contributed);
+
       $('message-text').textContent = entry.message;
       $('message-name').textContent = '— ' + entry.sender;
 
@@ -286,6 +339,27 @@
       err.hidden = !modal.error;
       err.textContent = modal.error || '';
     }
+
+    // Share dialog (contribute link)
+    const share = state.share;
+    $('share-scrim').hidden = !share;
+    if (share) {
+      const hasToken = !!share.token;
+      $('share-row').hidden = !hasToken;
+      $('share-empty').hidden = hasToken;
+      if (hasToken) $('share-url').value = contributeUrl(share.token);
+      $('share-copied').hidden = !share.copied || !hasToken;
+      $('share-create').hidden = hasToken;
+      $('share-regenerate').hidden = !hasToken;
+      $('share-revoke').hidden = !hasToken;
+      const btnsDisabled = !!share.loading;
+      ['share-create', 'share-regenerate', 'share-revoke', 'share-copy'].forEach((id) => {
+        $(id).disabled = btnsDisabled;
+      });
+      const err = $('share-error');
+      err.hidden = !share.error;
+      err.textContent = share.error || '';
+    }
   }
 
   // ---- wire up static controls ----------------------------------------------
@@ -300,6 +374,14 @@
   $('btn-edit-entry').addEventListener('click', openEditCurrentEntry);
   $('btn-delete-entry').addEventListener('click', deleteCurrentEntry);
 
+  $('btn-share').addEventListener('click', openShare);
+  $('share-close').addEventListener('click', closeShare);
+  $('share-scrim').addEventListener('click', (e) => { if (e.target === $('share-scrim')) closeShare(); });
+  $('share-create').addEventListener('click', createOrRegenerateLink);
+  $('share-regenerate').addEventListener('click', createOrRegenerateLink);
+  $('share-revoke').addEventListener('click', revokeLink);
+  $('share-copy').addEventListener('click', copyLink);
+
   $('modal-cancel').addEventListener('click', closeModal);
   $('modal-submit').addEventListener('click', submitModal);
   $('modal-scrim').addEventListener('click', (e) => { if (e.target === $('modal-scrim')) closeModal(); });
@@ -312,9 +394,10 @@
   });
 
   document.addEventListener('keydown', (e) => {
+    if (state.share && e.key === 'Escape') { closeShare(); return; }
     const editorScrim = $('editor-scrim');
     const editorOpen = editorScrim && !editorScrim.hidden;
-    if (!state.opened || state.modal || editorOpen) return;
+    if (!state.opened || state.modal || state.share || editorOpen) return;
     if (e.key === 'ArrowRight') next();
     else if (e.key === 'ArrowLeft') prev();
   });

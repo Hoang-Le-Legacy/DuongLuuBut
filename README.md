@@ -20,6 +20,12 @@ real database so Dương can curate it live from the site itself.
 - **No accounts, no bundler.** The frontend is the same plain `<script>`-tag
   JS as before; it just talks to `/api/*` with `fetch` instead of reading
   `js/data.js` and `localStorage`.
+- **Friends can write for Dương too.** From the admin bar, Dương can generate
+  a shareable link (`contribute.html?t=...`). Anyone with it gets a
+  standalone, book-themed form — no password — to submit a message and up to
+  5 photos. Contributions go live immediately as **private** entries (only
+  Dương can see them until he edits one to make it public); the link can be
+  regenerated or revoked anytime, which invalidates all copies of it at once.
 
 ## Project structure
 
@@ -31,13 +37,17 @@ js/api.js              fetch wrapper for /api/*, client-side photo downscale, to
 js/lightbox.js         Full-size photo viewer (prev/next, swipe, Esc)
 js/editor.js           Add/edit message modal (fields + 5-slot photo uploader)
 js/app.js              State machine + surgical DOM renderer (page flip, cover, nav)
+contribute.html         Standalone "write for Dương" page (shared link, no password)
+js/contribute.js        Controller for contribute.html (token check, form, photo grid)
 api/entries/index.js    GET (list) / POST (create)
 api/entries/[id].js     PATCH (update) / DELETE
 api/upload.js           POST — downscaled photo → Vercel Blob (private)
 api/photo.js            GET — streams a photo out of the private Blob store
 api/unlock.js            POST — password → signed unlock token
 api/password.js          POST — change password (requires a valid token)
-api/_lib/                db.js, auth.js, validate.js, respond.js — shared helpers
+api/contribute.js        GET (check token) / POST (guest submits a message)
+api/contribute-link.js   GET/POST/DELETE — admin manages the shareable link
+api/_lib/                db.js, auth.js, validate.js, respond.js, shareToken.js
 db/schema.sql            Postgres schema (entries, entry_images, settings)
 scripts/migrate.js       Applies db/schema.sql + seeds the initial password hash
 design/                  Original Claude design component, for reference
@@ -92,6 +102,22 @@ Share the plain URL with anyone — they'll only ever see public messages and
 have no way to write, upload, or unlock without the password (checked
 server-side on every request, not just hidden in the UI).
 
+## Letting friends write for Dương
+
+Click **🔗 Chia sẻ** in the admin bar (visible once unlocked) to create a
+link like `https://yourdomain.com/contribute?t=<random token>`. Send it to
+anyone — they get `contribute.html`, a write-only form (no password, no
+reading the existing book) to submit a message and up to 5 photos.
+
+- Submissions go live **immediately**, with no approval step, but always as
+  **private** entries — invisible to public visitors until Dương opens one in
+  the editor and unchecks "riêng tư".
+- It's one reusable link (like a Google Form), not per-person: everyone gets
+  the same URL. **🔄 Tạo lại** swaps in a fresh token (old copies of the link
+  stop working); **Thu hồi** clears it entirely.
+- Entries created this way carry a small "🎁 Từ bạn bè" badge, visible only
+  to Dương, so they're easy to tell apart from ones he added himself.
+
 ## Security notes
 
 - The password is never stored in plaintext — only a `scrypt` hash lives in
@@ -110,6 +136,13 @@ server-side on every request, not just hidden in the UI).
   allowed to see it (public entry, or an unlocked request for a private one).
 - All SQL is parameterized (tagged-template queries via
   `@neondatabase/serverless`); all API input is validated with Zod.
+- The contribute-link token is a 192-bit random string (`crypto.randomBytes(24)`),
+  not a human-chosen password — it's stored as plaintext in `settings` (so it
+  can be displayed back to Dương to copy), but it's long enough that guessing
+  it is infeasible. `api/contribute.js` and `api/upload.js` (the guest upload
+  path) both verify it server-side with `crypto.timingSafeEqual` before doing
+  anything. Revoking it (or regenerating a new one) invalidates every copy of
+  the old link at once, since there's exactly one active token at a time.
 
 ## Customize
 

@@ -254,6 +254,20 @@ a:hover { color: oklch(38% 0.16 30); }
   background: oklch(92% 0.03 150);
   border: 1px solid oklch(70% 0.06 150);
 }
+.contributed-pill {
+  position: absolute;
+  top: 38px;
+  left: 20px;
+  z-index: 30;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 11px;
+  color: oklch(45% 0.1 30);
+  background: oklch(93% 0.03 40);
+  border: 1px solid oklch(70% 0.06 35);
+  border-radius: 10px;
+  padding: 3px 9px;
+}
 .date-stamp {
   position: absolute;
   top: 14px;
@@ -428,6 +442,30 @@ a:hover { color: oklch(38% 0.16 30); }
   justify-content: flex-end;
   margin-top: 4px;
 }
+/* ---- share dialog (contribute link management) --------------------------- */
+.share { width: 320px; }
+.share__desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.share__row { display: flex; gap: 8px; }
+.share__input { flex: 1; font-size: 12px; }
+.share__empty {
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.share__copied {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: oklch(40% 0.1 150);
+}
+.share__actions { flex-wrap: wrap; }
+.share__actions .btn-danger { margin-right: auto; }
+
 .btn-ghost, .btn-primary {
   font-family: var(--font-body);
   font-weight: 600;
@@ -750,6 +788,46 @@ a:hover { color: oklch(38% 0.16 30); }
   animation: domino-float 2.6s ease-in-out infinite;
 }
 
+/* ---- contribute.html (standalone "write for Dương" page) ----------------- */
+.contribute-stage { height: auto; min-height: 100vh; padding: 32px 16px; }
+.contribute-card {
+  width: min(440px, 100%);
+  max-height: none;
+  overflow-y: visible;
+  align-items: center;
+  text-align: center;
+}
+.contribute-card .editor__field,
+.contribute-card form { text-align: left; }
+.contribute-card__logo {
+  position: static;
+  margin: 0 auto 2px;
+}
+.contribute-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+.contribute-status {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+}
+#contribute-form { display: flex; flex-direction: column; gap: 14px; width: 100%; }
+.contribute-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+}
+.contribute-success__icon { font-size: 40px; }
+
 /* ---- mobile: stack the spread into one column ---------------------------- */
 @media (max-width: 720px) {
   .book { width: 92vw; height: min(88vh, 760px); }
@@ -770,6 +848,8 @@ a:hover { color: oklch(38% 0.16 30); }
   .message { font-size: 19px; max-height: 30vh; }
   .entry-controls { position: static; margin-top: 12px; justify-content: flex-end; }
   .editor { max-height: 92vh; }
+  .share { width: 100%; }
+  .contribute-stage { padding: 20px 14px; }
 }
 
 /* ---- accessibility ------------------------------------------------------- */

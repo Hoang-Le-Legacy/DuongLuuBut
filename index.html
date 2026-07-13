@@ -31,6 +31,7 @@
           <div class="admin-bar" id="admin-bar">
             <button class="admin-bar__btn" id="btn-unlock" type="button" hidden>🔑 Mở khóa</button>
             <button class="admin-bar__btn admin-bar__btn--accent" id="btn-add" type="button" hidden>＋ Thêm</button>
+            <button class="admin-bar__btn admin-bar__btn--ghost" id="btn-share" type="button" hidden>🔗 Chia sẻ</button>
             <button class="admin-bar__btn admin-bar__btn--ghost" id="btn-lock" type="button" hidden>🔓 Khóa lại</button>
           </div>
 
@@ -58,6 +59,7 @@
               <div class="tape" id="tape"></div>
 
               <button class="privacy-pill is-public" id="privacy-pill" type="button" tabindex="-1">🌍 Công khai</button>
+              <div class="contributed-pill" id="contributed-pill" hidden title="Gửi qua liên kết chia sẻ">🎁 Từ bạn bè</div>
 
               <div class="date-stamp" id="date-stamp" hidden></div>
 
@@ -110,6 +112,29 @@
         <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" type="button" aria-label="Ảnh sau">›</button>
         <div class="lightbox__counter" id="lightbox-counter"></div>
       </dialog>
+
+      <!-- SHARE (contribute link management) -->
+      <div class="modal-scrim" id="share-scrim" hidden>
+        <div class="modal share" role="dialog" aria-modal="true" aria-labelledby="share-title">
+          <div class="modal__title" id="share-title">🔗 Chia sẻ để nhận lời nhắn</div>
+          <p class="share__desc">Gửi liên kết này cho bạn bè — họ viết lời nhắn và up ảnh cho Dương, không cần mật khẩu. Lời nhắn của họ chỉ Dương thấy lúc đầu.</p>
+
+          <div class="share__row" id="share-row" hidden>
+            <input class="modal__input share__input" id="share-url" type="text" readonly>
+            <button class="btn-ghost" id="share-copy" type="button">Chép</button>
+          </div>
+          <div class="share__empty" id="share-empty" hidden>Chưa có liên kết nào.</div>
+          <div class="share__copied" id="share-copied" hidden>Đã chép vào bộ nhớ tạm ✓</div>
+          <div class="modal__error" id="share-error" hidden></div>
+
+          <div class="modal__actions share__actions">
+            <button class="btn-danger" id="share-revoke" type="button" hidden>Thu hồi</button>
+            <button class="btn-ghost" id="share-close" type="button">Đóng</button>
+            <button class="btn-primary" id="share-create" type="button" hidden>Tạo liên kết</button>
+            <button class="btn-ghost" id="share-regenerate" type="button" hidden>Tạo lại</button>
+          </div>
+        </div>
+      </div>
 
       <!-- EDITOR (add / edit message) -->
       <div class="editor-scrim" id="editor-scrim" hidden>

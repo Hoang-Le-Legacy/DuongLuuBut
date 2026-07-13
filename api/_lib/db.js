@@ -37,6 +37,7 @@ function toEntryDTO(row, images) {
     message: row.message,
     date: toIsoDate(row.entry_date),
     isPrivate: row.is_private,
+    contributed: row.contributed,
     images: (images || []).map(toImageDTO),
     createdAt: row.created_at,
     updatedAt: row.updated_at
@@ -77,8 +78,8 @@ async function createEntry(data) {
   const images = data.images || [];
 
   const queries = [
-    sql`insert into entries (id, sender, message, entry_date, is_private)
-        values (${id}, ${data.sender}, ${data.message}, ${data.date ?? null}, ${data.isPrivate ?? false})`
+    sql`insert into entries (id, sender, message, entry_date, is_private, contributed)
+        values (${id}, ${data.sender}, ${data.message}, ${data.date ?? null}, ${data.isPrivate ?? false}, ${data.contributed ?? false})`
   ];
   images.forEach((img) => {
     queries.push(sql`

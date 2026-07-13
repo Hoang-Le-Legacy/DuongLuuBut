@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Viết lưu bút cho Dương "Domino"</title>
+  <meta name="description" content="Viết một lời nhắn lưu bút cho Dương Domino — không cần mật khẩu, chỉ cần liên kết bạn được gửi.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <main class="stage contribute-stage">
+    <div class="ambient"></div>
+
+    <div class="editor contribute-card">
+      <div class="logo-frame contribute-card__logo">
+        <img class="logo-mark" src="assets/logo.png" alt="University of Toledo Rockets logo" width="36" height="36">
+      </div>
+      <div class="editor__title">Viết cho Dương "Domino" 🚀</div>
+
+      <div id="contribute-loading" class="contribute-status">Đang kiểm tra liên kết…</div>
+
+      <div id="contribute-invalid" class="contribute-status" hidden>
+        Liên kết này không hợp lệ hoặc đã bị thu hồi 😢<br>
+        Hỏi lại người đã gửi bạn liên kết này nhé.
+      </div>
+
+      <form id="contribute-form" hidden>
+        <p class="contribute-desc">Viết vài lời cho Dương — lời nhắn của bạn sẽ được gửi thẳng vào sổ lưu bút. Chỉ Dương xem được lúc đầu; Dương có thể chọn công khai sau.</p>
+
+        <label class="editor__field">
+          <span>Tên bạn</span>
+          <input class="editor__input" id="contribute-sender" type="text" maxlength="80" placeholder="Tên của bạn">
+        </label>
+
+        <label class="editor__field">
+          <span>Ngày (không bắt buộc)</span>
+          <input class="editor__input" id="contribute-date" type="date">
+        </label>
+
+        <label class="editor__field">
+          <span>Lời nhắn</span>
+          <textarea class="editor__textarea" id="contribute-message" maxlength="4000" rows="5" placeholder="Viết lời nhắn cho Dương..."></textarea>
+        </label>
+
+        <div class="editor__photos">
+          <span class="editor__photos-label">Ảnh (tối đa 5, không bắt buộc)</span>
+          <div class="editor__photo-grid" id="contribute-photo-grid"></div>
+          <div class="editor__photo-status" id="contribute-photo-status" hidden></div>
+          <input type="file" id="contribute-photo-input" accept="image/*" multiple hidden>
+        </div>
+
+        <div class="editor__error" id="contribute-error" hidden></div>
+        <div class="editor__actions">
+          <button class="btn-primary" id="contribute-submit" type="button">Gửi lời nhắn 💌</button>
+        </div>
+      </form>
+
+      <div id="contribute-success" class="contribute-success" hidden>
+        <div class="contribute-success__icon">🎉</div>
+        <p>Đã gửi! Cảm ơn bạn đã viết cho Dương 💌</p>
+        <button class="btn-ghost" id="contribute-again" type="button">Viết thêm lời nhắn khác</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/data.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/contribute.js"></script>
+</body>
+</html>

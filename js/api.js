@@ -111,6 +111,28 @@
     return !!getToken();
   }
 
+  // ---- contribute link (admin-managed) ----------------------------------
+  function getContributeLink() {
+    return request('/api/contribute-link', { auth: true });
+  }
+
+  function createContributeLink() {
+    return request('/api/contribute-link', { method: 'POST', auth: true });
+  }
+
+  function revokeContributeLink() {
+    return request('/api/contribute-link', { method: 'DELETE', auth: true });
+  }
+
+  // ---- contribute link (guest side) --------------------------------------
+  function checkContributeToken(token) {
+    return request('/api/contribute?token=' + encodeURIComponent(token));
+  }
+
+  function submitContribution(payload) {
+    return request('/api/contribute', { method: 'POST', body: payload });
+  }
+
   // ---- date formatting -------------------------------------------------
   // The API speaks ISO (`yyyy-mm-dd`, matching <input type="date">); the
   // book's date-stamp badge shows `mm-dd-yy` per the design.
@@ -156,8 +178,7 @@
     return Math.ceil((base64.length * 3) / 4);
   }
 
-  /** Downscales an image file client-side, uploads it, returns `{url, pathname}`. */
-  async function uploadImage(file) {
+  async function prepareImageDataUrl(file) {
     if (!file || !/^image\//.test(file.type)) {
       throw new ApiError(400, 'not_an_image');
     }
@@ -167,7 +188,19 @@
       // one more pass at half the size if still too large after the first downscale
       dataUrl = downscale(img, Math.round(MAX_IMAGE_DIMENSION / 2));
     }
+    return dataUrl;
+  }
+
+  /** Downscales an image file client-side, uploads it, returns `{url, pathname}`. */
+  async function uploadImage(file) {
+    const dataUrl = await prepareImageDataUrl(file);
     return request('/api/upload', { method: 'POST', body: { image: dataUrl }, auth: true });
+  }
+
+  /** Same as `uploadImage`, but for a guest authorized by a contribute link token instead of the admin bearer token. */
+  async function uploadContributionImage(file, token) {
+    const dataUrl = await prepareImageDataUrl(file);
+    return request('/api/upload', { method: 'POST', body: { image: dataUrl, contributeToken: token } });
   }
 
   window.SLUUBUT_API = {
@@ -183,6 +216,12 @@
     lock,
     changePassword,
     uploadImage,
-    isoToMmDdYy
+    isoToMmDdYy,
+    getContributeLink,
+    createContributeLink,
+    revokeContributeLink,
+    checkContributeToken,
+    submitContribution,
+    uploadContributionImage
   };
 })();

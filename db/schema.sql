@@ -9,10 +9,15 @@ create table if not exists entries (
   message     text not null,
   entry_date  date,
   is_private  boolean not null default false,
+  contributed boolean not null default false,
   position    integer not null default 0,
   created_at  timestamptz not null default now(),
   updated_at  timestamptz not null default now()
 );
+-- Re-running this file against a database that already has `entries` (no
+-- `contributed` column yet) needs an explicit ALTER — `create table if not
+-- exists` is a no-op once the table exists.
+alter table entries add column if not exists contributed boolean not null default false;
 
 create table if not exists entry_images (
   id         uuid primary key default gen_random_uuid(),
