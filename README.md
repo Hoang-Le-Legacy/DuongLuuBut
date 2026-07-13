@@ -12,7 +12,9 @@ real database so Dương can curate it live from the site itself.
   message, up to 5 photos each) turns on. Everyone else with the link only
   ever sees public messages — enforced on the server, not just hidden in the UI.
 - **Data**: Neon (serverless Postgres) for messages, [Vercel Blob](https://vercel.com/docs/storage/vercel-blob)
-  for photos (the DB only stores URLs).
+  (private store) for photos — the DB only stores URLs, and photos are served
+  back through `api/photo.js` rather than Blob's own CDN URL, since a private
+  store requires an `Authorization` header that a plain `<img>` tag can't send.
 - **Hosting**: Vercel — the frontend is served as static files, the API lives
   in `/api/*` as Node serverless functions.
 - **No accounts, no bundler.** The frontend is the same plain `<script>`-tag
@@ -31,7 +33,8 @@ js/editor.js           Add/edit message modal (fields + 5-slot photo uploader)
 js/app.js              State machine + surgical DOM renderer (page flip, cover, nav)
 api/entries/index.js    GET (list) / POST (create)
 api/entries/[id].js     PATCH (update) / DELETE
-api/upload.js           POST — downscaled photo → Vercel Blob
+api/upload.js           POST — downscaled photo → Vercel Blob (private)
+api/photo.js            GET — streams a photo out of the private Blob store
 api/unlock.js            POST — password → signed unlock token
 api/password.js          POST — change password (requires a valid token)
 api/_lib/                db.js, auth.js, validate.js, respond.js — shared helpers
@@ -69,7 +72,9 @@ Then open the printed local URL (typically `http://localhost:3000`).
 1. **Neon**: create a project at [neon.tech](https://neon.tech), copy the
    pooled connection string into `DATABASE_URL`.
 2. **Vercel**: import this repo as a new Vercel project. Add a **Blob** store
-   under Storage — it fills in `BLOB_READ_WRITE_TOKEN` for you automatically.
+   under Storage (either access level works — the app always talks to it as
+   `private` and proxies photos through `api/photo.js`). This fills in
+   `BLOB_READ_WRITE_TOKEN` for you automatically.
 3. **Environment variables**: in the Vercel project settings, add
    `DATABASE_URL`, `SESSION_SECRET` (a fresh random value — don't reuse a
    local one), and `ADMIN_PASSWORD` (Dương's real password; used only for the
@@ -98,6 +103,11 @@ server-side on every request, not just hidden in the UI).
   a `401` on all of them.
 - `GET /api/entries` filters private entries server-side — an
   unauthenticated request never receives their `message`/`sender`/photos.
+- Photos live in a **private** Blob store; `api/photo.js` is the only thing
+  that can read it (via the server's `BLOB_READ_WRITE_TOKEN`/OIDC), and
+  streams bytes back without its own auth check — by the time a client has a
+  photo's pathname at all, `GET /api/entries` has already decided it's
+  allowed to see it (public entry, or an unlocked request for a private one).
 - All SQL is parameterized (tagged-template queries via
   `@neondatabase/serverless`); all API input is validated with Zod.
 

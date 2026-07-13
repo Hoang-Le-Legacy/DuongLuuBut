@@ -41,12 +41,16 @@ module.exports = async function handler(req, res) {
     const pathname = `entries/${crypto.randomUUID()}.${ext}`;
 
     const blob = await put(pathname, buffer, {
-      access: 'public',
+      access: 'private',
       contentType: mime,
       addRandomSuffix: false
     });
 
-    return ok(res, { url: blob.url, pathname: blob.pathname }, 201);
+    // The store is private, so `blob.url` needs an Authorization header to
+    // read — useless in a plain <img src>. Point the DB at our own proxy
+    // instead (see api/photo.js), which holds that credential server-side.
+    const url = `/api/photo?p=${encodeURIComponent(blob.pathname)}`;
+    return ok(res, { url, pathname: blob.pathname }, 201);
   } catch (err) {
     return serverError(res, err);
   }

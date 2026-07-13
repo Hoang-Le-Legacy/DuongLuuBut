@@ -17,7 +17,9 @@ const dateField = z
   .optional();
 
 const imageInput = z.object({
-  url: z.string().url().max(2048),
+  // Not a strict URL: this is our own same-origin proxy path
+  // (`/api/photo?p=...`), not an absolute Blob URL — see api/photo.js.
+  url: z.string().min(1).max(2048),
   pathname: z.string().min(1).max(2048),
   position: z.number().int().min(0).max(4)
 });
