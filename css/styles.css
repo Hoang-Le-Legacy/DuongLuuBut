@@ -163,6 +163,9 @@ a:hover { color: oklch(38% 0.16 30); }
   background: oklch(75% 0.03 50);
   transition: background 0.2s;
 }
+.dot--locked {
+  border: 1.5px dashed oklch(45% 0.1 30);
+}
 
 /* ---- admin bar (unlock / add / lock) -------------------------------------- */
 .admin-bar {
@@ -364,6 +367,23 @@ a:hover { color: oklch(38% 0.16 30); }
   font-size: 22px;
   font-weight: 600;
   color: oklch(38% 0.08 30);
+}
+.message-block.is-locked .message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 90px;
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  padding: 22px 18px;
+  border: 1.5px dashed var(--border-soft);
+  border-radius: 8px;
+  background: repeating-linear-gradient(135deg,
+    oklch(93% 0.015 60 / 0.6) 0 10px, oklch(89% 0.02 55 / 0.5) 10px 20px);
 }
 .leaf-shadow {
   position: absolute;
@@ -852,41 +872,35 @@ a:hover { color: oklch(38% 0.16 30); }
   opacity: 0.85;
 }
 
-/* ---- meme sticker (contribute.html easter egg) ---------------------------- */
+/* ---- meme sticker (Dương's actual meme, index.html + contribute.html) ----- */
 .meme-sticker {
+  width: 140px;
+  margin: 6px auto;
+  padding: 6px 6px 16px;
+  background: oklch(98% 0.005 60);
+  border-radius: 3px;
+  transform: rotate(-3deg);
+  box-shadow: 0 10px 20px oklch(20% 0.03 40 / 0.3);
+}
+.meme-sticker__img {
+  display: block;
   width: 100%;
-  max-width: 300px;
-  margin: 2px auto 6px;
-  padding: 14px 14px 16px;
-  background: oklch(18% 0.01 40);
-  border-radius: 6px;
-  transform: rotate(-2deg);
-  box-shadow:
-    0 10px 22px oklch(20% 0.03 40 / 0.35),
-    0 0 0 6px oklch(97% 0.01 60);
+  height: auto;
+  border-radius: 2px;
+}
+
+/* ---- contribute rules (Dương's original English prompts, untranslated) --- */
+.contribute-rules {
+  margin: 0;
+  padding: 0;
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-}
-.meme-sticker__top {
+  gap: 4px;
   font-family: var(--font-body);
-  font-weight: 800;
-  font-size: 11px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: oklch(96% 0 0);
-  text-align: center;
-}
-.meme-sticker__bottom {
-  font-family: var(--font-body);
-  font-weight: 800;
-  font-size: 15px;
-  line-height: 1.25;
-  letter-spacing: 0.01em;
-  text-transform: uppercase;
-  color: oklch(98% 0 0);
-  text-align: center;
-  text-shadow: 0 2px 0 oklch(0% 0 0 / 0.4);
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--ink-soft);
 }
 
 /* ---- comment generator (contribute.html writing prompts) ------------------ */

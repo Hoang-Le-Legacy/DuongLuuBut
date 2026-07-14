@@ -61,7 +61,8 @@
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.className = 'dot';
-      dot.setAttribute('aria-label', 'Trang ' + (i + 1));
+      dot.classList.toggle('dot--locked', !!entry.locked);
+      dot.setAttribute('aria-label', entry.locked ? 'Trang ' + (i + 1) + ' (riêng tư)' : 'Trang ' + (i + 1));
       dot.addEventListener('click', () => jump(i));
       container.appendChild(dot);
       return dot;
@@ -317,8 +318,15 @@
 
       $('contributed-pill').hidden = !(unlocked && entry.contributed);
 
-      $('message-text').textContent = entry.message;
-      $('message-name').textContent = '— ' + entry.sender;
+      const locked = !!entry.locked;
+      $('message-block').classList.toggle('is-locked', locked);
+      $('message-name').hidden = locked;
+      if (locked) {
+        $('message-text').textContent = 'Riêng tư — chỉ Dương mới đọc được lời nhắn này. Tò mò dữ hen 👀';
+      } else {
+        $('message-text').textContent = entry.message;
+        $('message-name').textContent = '— ' + entry.sender;
+      }
 
       renderPhotoStrip(entry.images || []);
 

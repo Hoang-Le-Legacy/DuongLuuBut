@@ -21,9 +21,8 @@
       </div>
       <div class="editor__title">Viết cho Dương "Domino" 🚀</div>
 
-      <div class="meme-sticker" aria-hidden="true">
-        <span class="meme-sticker__top">Yeaaahhhh</span>
-        <span class="meme-sticker__bottom">Goodbye is not going to work for me</span>
+      <div class="meme-sticker">
+        <img class="meme-sticker__img" src="assets/unnamed.jpg" alt="Office Space meme: Yeaaahhhh, goodbye is not going to work for me">
       </div>
 
       <div id="contribute-loading" class="contribute-status">Đang kiểm tra liên kết…</div>
@@ -34,7 +33,12 @@
       </div>
 
       <form id="contribute-form" hidden>
-        <p class="contribute-desc">Roast mình, khen mình, hay tố mình một tội gì đó — tùy bạn chọn 😌 Để lại một lời tiên tri hay một fun fact cũng được, độ chính xác không quan trọng. Lời khuyên tệ hại và quote truyền cảm hứng "dỏm" dựa trên kỷ niệm thật đều được khuyến khích. Lời nhắn của bạn sẽ gửi thẳng vào sổ lưu bút — chỉ Dương xem được lúc đầu, Dương có thể chọn công khai sau.</p>
+        <ul class="contribute-rules">
+          <li>◆ Roast me, compliment me, or accuse me of a crime. Choose wisely.</li>
+          <li>◆ You can even leave me a prophecy or a fun fact. Accuracy is optional.</li>
+          <li>◆ Terrible advice and fake inspirational quotes based on our real memories are encouraged.</li>
+        </ul>
+        <p class="contribute-desc">Lời nhắn của bạn sẽ gửi thẳng vào sổ lưu bút — chỉ Dương xem được lúc đầu, Dương có thể chọn công khai sau.</p>
 
         <details class="generator">
           <summary class="generator__toggle">Còn không biết viết gì à? — Comment generator v1.0 💡</summary>
@@ -55,7 +59,7 @@
         </label>
 
         <label class="editor__field">
-          <span>Tên bạn <span class="editor__field-hint">(để biết ai viết... à nhầm, để cảm ơn đúng người 😄)</span></span>
+          <span>Tên bạn <span class="editor__field-hint">(so I know who to blame... I mean, thank 💖)</span></span>
           <input class="editor__input" id="contribute-sender" type="text" maxlength="80" placeholder="Tên của bạn">
         </label>
 
@@ -71,7 +75,7 @@
           <input type="file" id="contribute-photo-input" accept="image/*" multiple hidden>
         </div>
 
-        <p class="contribute-note">Viết tiếng Việt hay tiếng Anh đều ok hết nha, ahihi. Love y'all 🫡 hẹn gặp lại.</p>
+        <p class="contribute-note">Viết tiếng Việt hay tiếng Anh đều ok hết nha, ahihi.<br>Love y'all 🫡 See you later.</p>
 
         <div class="editor__error" id="contribute-error" hidden></div>
         <div class="editor__actions">
@@ -82,7 +86,7 @@
       <div id="contribute-success" class="contribute-success" hidden>
         <div class="contribute-success__icon">🎉</div>
         <p>Đã gửi! Cảm ơn bạn đã viết cho Dương 💌</p>
-        <p class="contribute-success__signoff">Love y'all 🫡 hẹn gặp lại.</p>
+        <p class="contribute-success__signoff">Love y'all 🫡 See you later.</p>
         <button class="btn-ghost" id="contribute-again" type="button">Viết thêm lời nhắn khác</button>
       </div>
     </div>

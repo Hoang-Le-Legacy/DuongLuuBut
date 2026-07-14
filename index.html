@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,9 +8,12 @@
   <meta name="description" content="Sổ lưu bút tạm biệt cho Dương Domino — 6 năm, một gia đình thứ hai. 🚀">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Caveat:wght@500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
   <main class="stage">
     <div class="ambient"></div>
@@ -26,13 +30,19 @@
           <div class="kicker">Sổ Lưu Bút &middot; 2026</div>
           <h1 class="title">Dương "Domino" <span class="title__emoji">🚀</span></h1>
 
-          <p class="intro">Chúc mừng — bạn được chọn tham gia trò lưu bút kiểu "thập niên 90" này. 6 năm, không biết bao nhiêu chuyến đi, và một gia đình thứ hai. Làm mình cười, khóc, hay muốn gọi luật sư — đều được hết. Go Rockets, đi mạnh giỏi. 🚀</p>
+          <p class="intro">You've been selected to participate in some old-school '90s yearbook nonsense.
+
+            Make me laugh, cry, or want to contact a lawyer. Go Rockets, đi mạnh giỏi. 🚀</p>
 
           <div class="admin-bar" id="admin-bar">
             <button class="admin-bar__btn" id="btn-unlock" type="button" hidden>🔑 Mở khóa</button>
             <button class="admin-bar__btn admin-bar__btn--accent" id="btn-add" type="button" hidden>＋ Thêm</button>
             <button class="admin-bar__btn admin-bar__btn--ghost" id="btn-share" type="button" hidden>🔗 Chia sẻ</button>
             <button class="admin-bar__btn admin-bar__btn--ghost" id="btn-lock" type="button" hidden>🔓 Khóa lại</button>
+          </div>
+
+          <div class="meme-sticker">
+            <img class="meme-sticker__img" src="assets/unnamed.jpg" alt="Office Space meme: Yeaaahhhh, goodbye is not going to work for me">
           </div>
 
           <div class="page-meta">
@@ -59,8 +69,10 @@
               <div class="tape" id="tape"></div>
 
               <div class="badge-row">
-                <button class="privacy-pill is-public" id="privacy-pill" type="button" tabindex="-1">🌍 Công khai</button>
-                <div class="contributed-pill" id="contributed-pill" hidden title="Gửi qua liên kết chia sẻ">🎁 Từ bạn bè</div>
+                <button class="privacy-pill is-public" id="privacy-pill" type="button" tabindex="-1">🌍 Công
+                  khai</button>
+                <div class="contributed-pill" id="contributed-pill" hidden title="Gửi qua liên kết chia sẻ">🎁 Từ bạn bè
+                </div>
               </div>
 
               <div class="date-stamp" id="date-stamp" hidden></div>
@@ -74,7 +86,8 @@
 
               <div class="entry-controls" id="entry-controls" hidden>
                 <button class="entry-controls__btn" id="btn-edit-entry" type="button">✏️ Sửa</button>
-                <button class="entry-controls__btn entry-controls__btn--danger" id="btn-delete-entry" type="button">🗑️ Xóa</button>
+                <button class="entry-controls__btn entry-controls__btn--danger" id="btn-delete-entry" type="button">🗑️
+                  Xóa</button>
               </div>
             </div>
 
@@ -94,9 +107,11 @@
       <div class="modal-scrim" id="modal-scrim" hidden>
         <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
           <div class="modal__title" id="modal-title"></div>
-          <input class="modal__input" id="modal-input" type="password" placeholder="Mật khẩu" autocomplete="current-password">
+          <input class="modal__input" id="modal-input" type="password" placeholder="Mật khẩu"
+            autocomplete="current-password">
           <div id="modal-new-row" hidden>
-            <input class="modal__input" id="modal-new-input" type="password" placeholder="Mật khẩu mới" autocomplete="new-password">
+            <input class="modal__input" id="modal-new-input" type="password" placeholder="Mật khẩu mới"
+              autocomplete="new-password">
           </div>
           <div class="modal__error" id="modal-error" hidden></div>
           <div class="modal__actions">
@@ -109,9 +124,11 @@
       <!-- LIGHTBOX (photo viewer) -->
       <dialog class="lightbox" id="lightbox">
         <button class="lightbox__close" id="lightbox-close" type="button" aria-label="Đóng">✕</button>
-        <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" type="button" aria-label="Ảnh trước">‹</button>
+        <button class="lightbox__nav lightbox__nav--prev" id="lightbox-prev" type="button"
+          aria-label="Ảnh trước">‹</button>
         <img class="lightbox__img" id="lightbox-img" alt="">
-        <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" type="button" aria-label="Ảnh sau">›</button>
+        <button class="lightbox__nav lightbox__nav--next" id="lightbox-next" type="button"
+          aria-label="Ảnh sau">›</button>
         <div class="lightbox__counter" id="lightbox-counter"></div>
       </dialog>
 
@@ -119,7 +136,8 @@
       <div class="modal-scrim" id="share-scrim" hidden>
         <div class="modal share" role="dialog" aria-modal="true" aria-labelledby="share-title">
           <div class="modal__title" id="share-title">🔗 Chia sẻ để nhận lời nhắn</div>
-          <p class="share__desc">Gửi liên kết này cho bạn bè — họ viết lời nhắn và up ảnh cho Dương, không cần mật khẩu. Lời nhắn của họ chỉ Dương thấy lúc đầu.</p>
+          <p class="share__desc">Gửi liên kết này cho bạn bè — họ viết lời nhắn và up ảnh cho Dương, không cần mật khẩu.
+            Lời nhắn của họ chỉ Dương thấy lúc đầu.</p>
 
           <div class="share__row" id="share-row" hidden>
             <input class="modal__input share__input" id="share-url" type="text" readonly>
@@ -155,7 +173,8 @@
 
           <label class="editor__field">
             <span>Lời nhắn</span>
-            <textarea class="editor__textarea" id="editor-message" maxlength="4000" rows="5" placeholder="Viết lời nhắn..."></textarea>
+            <textarea class="editor__textarea" id="editor-message" maxlength="4000" rows="5"
+              placeholder="Viết lời nhắn..."></textarea>
           </label>
 
           <label class="editor__checkbox">
@@ -205,4 +224,5 @@
   <script src="js/editor.js"></script>
   <script src="js/app.js"></script>
 </body>
+
 </html>

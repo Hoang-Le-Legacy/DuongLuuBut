@@ -30,13 +30,34 @@ function toImageDTO(row) {
   return { url: row.url, pathname: row.pathname, position: row.position };
 }
 
-function toEntryDTO(row, images) {
+/**
+ * `redact: true` produces a teaser DTO for a private entry viewed without
+ * the unlock token: the page still shows up in the flip sequence (so its
+ * existence is visible and its position holds), but the message, sender,
+ * date, and photos are withheld — only Dương's unlock reveals them.
+ */
+function toEntryDTO(row, images, { redact = false } = {}) {
+  if (redact && row.is_private) {
+    return {
+      id: row.id,
+      sender: null,
+      message: null,
+      date: null,
+      isPrivate: true,
+      locked: true,
+      contributed: row.contributed,
+      images: [],
+      createdAt: row.created_at,
+      updatedAt: row.updated_at
+    };
+  }
   return {
     id: row.id,
     sender: row.sender,
     message: row.message,
     date: toIsoDate(row.entry_date),
     isPrivate: row.is_private,
+    locked: false,
     contributed: row.contributed,
     images: (images || []).map(toImageDTO),
     createdAt: row.created_at,
@@ -45,9 +66,7 @@ function toEntryDTO(row, images) {
 }
 
 async function listEntries(includePrivate) {
-  const rows = includePrivate
-    ? await sql`select * from entries order by position asc, created_at asc`
-    : await sql`select * from entries where is_private = false order by position asc, created_at asc`;
+  const rows = await sql`select * from entries order by position asc, created_at asc`;
 
   if (rows.length === 0) return [];
 
@@ -60,7 +79,8 @@ async function listEntries(includePrivate) {
     if (!imagesByEntry.has(img.entry_id)) imagesByEntry.set(img.entry_id, []);
     imagesByEntry.get(img.entry_id).push(img);
   }
-  return rows.map((r) => toEntryDTO(r, imagesByEntry.get(r.id)));
+  const redact = !includePrivate;
+  return rows.map((r) => toEntryDTO(r, imagesByEntry.get(r.id), { redact }));
 }
 
 async function getEntry(id, includePrivate) {
