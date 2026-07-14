@@ -364,6 +364,7 @@ a:hover { color: oklch(38% 0.16 30); }
   flex-direction: column;
   justify-content: center;
   gap: 8px;
+  padding-bottom: 28px;
 }
 .message {
   font-family: var(--font-hand);
@@ -969,6 +970,7 @@ a:hover { color: oklch(38% 0.16 30); }
   .photo-strip { margin-top: 30px; }
   .thumb { width: 48px; height: 48px; }
   .message { font-size: 19px; max-height: 30vh; }
+  .message-block { padding-bottom: 0; }
   .entry-controls { position: static; margin-top: 12px; justify-content: flex-end; }
   .editor { max-height: 92vh; }
   .share { width: 100%; }
