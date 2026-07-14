@@ -301,19 +301,37 @@ a:hover { color: oklch(38% 0.16 30); }
   margin: 38px 0 14px 2px;
 }
 .thumb {
+  position: relative;
   width: 58px;
   height: 58px;
   padding: 0;
   border: none;
   border-radius: 4px;
-  overflow: hidden;
+  overflow: visible;
   cursor: pointer;
   background: white;
   box-shadow: 0 3px 8px oklch(30% 0.03 40 / 0.25);
   transform: rotate(-2deg);
 }
 .thumb:nth-child(even) { transform: rotate(2deg); }
-.thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 4px;
+}
+.thumb::after {
+  content: '📌';
+  position: absolute;
+  top: -9px;
+  right: -7px;
+  font-size: 16px;
+  line-height: 1;
+  transform: rotate(12deg);
+  filter: drop-shadow(0 2px 2px oklch(20% 0.03 40 / 0.45));
+  pointer-events: none;
+}
 .entry-controls {
   position: absolute;
   bottom: 18px;
@@ -969,6 +987,7 @@ a:hover { color: oklch(38% 0.16 30); }
   .leaf-content { padding: 26px 22px 20px; }
   .photo-strip { margin-top: 30px; }
   .thumb { width: 48px; height: 48px; }
+  .thumb::after { font-size: 14px; top: -7px; right: -6px; }
   .message { font-size: 19px; max-height: 30vh; }
   .message-block { padding-bottom: 0; }
   .entry-controls { position: static; margin-top: 12px; justify-content: flex-end; }
