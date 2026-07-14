@@ -219,12 +219,18 @@ a:hover { color: oklch(38% 0.16 30); }
 .leaf {
   position: absolute;
   inset: 0;
-  padding: 30px 34px 26px 26px;
   transform-origin: left center;
   background-color: var(--paper-right);
   background-image: repeating-linear-gradient(to bottom,
     transparent 0 30px, var(--rule) 30px 31px);
   transform: rotateY(0deg) scaleY(1);
+}
+.leaf-content {
+  position: absolute;
+  inset: 0;
+  padding: 30px 34px 26px 26px;
+  display: flex;
+  flex-direction: column;
 }
 .tape {
   position: absolute;
@@ -351,12 +357,20 @@ a:hover { color: oklch(38% 0.16 30); }
   max-width: 240px;
   line-height: 1.5;
 }
+.message-block {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
 .message {
   font-family: var(--font-hand);
   font-size: 21px;
   line-height: 1.5;
   color: var(--ink);
-  max-height: 150px;
+  max-height: 320px;
   overflow: auto;
   padding-right: 4px;
 }
@@ -951,7 +965,7 @@ a:hover { color: oklch(38% 0.16 30); }
   .title { font-size: 22px; margin-bottom: 12px; }
   .page-meta { margin-top: 12px; }
   .logo-frame { display: none; }
-  .leaf { padding: 26px 22px 20px; }
+  .leaf-content { padding: 26px 22px 20px; }
   .photo-strip { margin-top: 30px; }
   .thumb { width: 48px; height: 48px; }
   .message { font-size: 19px; max-height: 30vh; }
