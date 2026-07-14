@@ -180,6 +180,23 @@
     }
   }
 
+  function insertTemplate(template) {
+    const current = els.message.value;
+    const insertion = current && !current.endsWith('\n') ? `${current}\n${template}` : current + template;
+    els.message.value = insertion;
+    els.message.focus();
+    const blankStart = insertion.lastIndexOf('____');
+    if (blankStart !== -1) {
+      els.message.setSelectionRange(blankStart, blankStart + 4);
+    } else {
+      els.message.setSelectionRange(insertion.length, insertion.length);
+    }
+  }
+
+  document.querySelectorAll('.generator__chip').forEach((chip) => {
+    chip.addEventListener('click', () => insertTemplate(chip.dataset.template));
+  });
+
   els.submit.addEventListener('click', submit);
   els.again.addEventListener('click', () => {
     resetForm();
