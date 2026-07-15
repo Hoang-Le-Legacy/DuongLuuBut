@@ -4,8 +4,8 @@
    ========================================================================= */
 
 @font-face {
-  font-family: 'Fz-ImogenAgnes-1';
-  src: url('../assets/Fz-ImogenAgnes-1.ttf') format('truetype');
+  font-family: 'Fz-Dom-Casual';
+  src: url('../assets/Fz-Dom-Casual.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -14,7 +14,7 @@
 :root {
   --font-display: 'Playfair Display', serif;
   --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
-  --font-hand: 'Fz-ImogenAgnes-1', 'Caveat', cursive;
+  --font-hand: 'Fz-Dom-Casual', 'Caveat', cursive;
 
   --paper: oklch(96% 0.012 60);
   --paper-left: oklch(94% 0.015 65);
