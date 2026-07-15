@@ -3,10 +3,18 @@
    Warm-paper farewell book. Palette + type ported from the design component.
    ========================================================================= */
 
+@font-face {
+  font-family: 'FzCampanaScript';
+  src: url('../assets/FzCampanaScript.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --font-display: 'Playfair Display', serif;
   --font-body: 'Be Vietnam Pro', system-ui, sans-serif;
-  --font-hand: 'Caveat', cursive;
+  --font-hand: 'FzCampanaScript', 'Caveat', cursive;
 
   --paper: oklch(96% 0.012 60);
   --paper-left: oklch(94% 0.015 65);
