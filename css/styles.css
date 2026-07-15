@@ -901,17 +901,17 @@ a:hover { color: oklch(38% 0.16 30); }
 .cover__glass {
   position: absolute;
   top: 50%;
-  width: clamp(68px, 8.5vw, 118px);
+  width: clamp(160px, 22vw, 320px);
   filter: drop-shadow(0 16px 24px oklch(15% 0.04 30 / 0.55));
   pointer-events: none;
   user-select: none;
 }
 .cover__wine {
-  right: clamp(16px, 7%, 90px);
+  right: clamp(-60px, -4%, -20px);
   transform: translateY(-52%) rotate(-6deg);
 }
 .cover__glass {
-  left: clamp(16px, 7%, 90px);
+  left: clamp(-60px, -4%, -20px);
   transform: translateY(-52%) rotate(6deg);
 }
 .cover__rockets {
@@ -1115,9 +1115,9 @@ a:hover { color: oklch(38% 0.16 30); }
   .editor { max-height: 92vh; }
   .share { width: 100%; }
   .contribute-stage { padding: 20px 14px; }
-  .cover__wine, .cover__glass { width: clamp(52px, 14vw, 76px); }
-  .cover__wine { right: 4px; }
-  .cover__glass { left: 4px; }
+  .cover__wine, .cover__glass { width: clamp(110px, 30vw, 170px); }
+  .cover__wine { right: -30px; }
+  .cover__glass { left: -30px; }
 }
 
 @media (max-width: 460px) {
