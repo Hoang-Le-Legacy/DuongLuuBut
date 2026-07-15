@@ -900,7 +900,7 @@ a:hover { color: oklch(38% 0.16 30); }
 .cover__wine,
 .cover__glass {
   position: absolute;
-  top: 50%;
+  bottom: -16px;
   width: clamp(160px, 22vw, 320px);
   filter: drop-shadow(0 16px 24px oklch(15% 0.04 30 / 0.55));
   pointer-events: none;
@@ -908,11 +908,11 @@ a:hover { color: oklch(38% 0.16 30); }
 }
 .cover__wine {
   right: clamp(-60px, -4%, -20px);
-  transform: translateY(-52%) rotate(-6deg);
+  transform: rotate(-6deg);
 }
 .cover__glass {
   left: clamp(-60px, -4%, -20px);
-  transform: translateY(-52%) rotate(6deg);
+  transform: rotate(6deg);
 }
 .cover__rockets {
   font-family: var(--font-hand);
