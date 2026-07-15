@@ -56,6 +56,15 @@ const contributeInput = z.object({
   images: imagesField
 });
 
+// Short public "wishes wall" entry — same contribute-link token as
+// `contributeInput`, but no privacy toggle and a much shorter cap (this is
+// always public, meant to be read by everyone, not reviewed first).
+const wishInput = z.object({
+  token: z.string().min(1).max(200),
+  sender: z.string().trim().min(1).max(80),
+  text: z.string().trim().min(1).max(120)
+});
+
 const passwordChangeInput = z.object({
   currentPassword: z.string().min(1).max(200),
   newPassword: z.string().min(4).max(200)
@@ -76,6 +85,7 @@ module.exports = {
   unlockInput,
   passwordChangeInput,
   contributeInput,
+  wishInput,
   uploadInput,
   ALLOWED_IMAGE_MIME
 };

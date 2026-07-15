@@ -21,11 +21,13 @@
 
   const state = {
     opened: false,
+    view: 'wishes',       // 'wishes' | 'entries' — the wishes wall is always the first page
     index: 0,
     turning: false,
     phase: 'idle',       // 'idle' | 'closing' | 'opening'
     direction: 'next',    // 'next' | 'prev'
     entries: [],
+    wishes: [],
     unlocked: API.isUnlockedLocally(),
     loading: true,
     modal: null,           // { mode, error } | null
@@ -54,45 +56,80 @@
     }
   }
 
+  async function loadWishes() {
+    try {
+      const data = await API.fetchWishes();
+      setState({ wishes: data.wishes || [] });
+    } catch (err) {
+      setState({ wishes: [] });
+    }
+  }
+
+  // Dot 0 is always the wishes wall (the permanent first page); dots 1..N
+  // map to entries[0..N-1]. `jump()`/render() use this same virtual index.
   function rebuildDots(entries) {
     const container = $('dots');
     container.innerHTML = '';
-    dotEls = entries.map((entry, i) => {
+    const wishesDot = document.createElement('button');
+    wishesDot.type = 'button';
+    wishesDot.className = 'dot dot--wishes';
+    wishesDot.setAttribute('aria-label', 'Trang 1 (lời chúc)');
+    wishesDot.addEventListener('click', () => jump(0));
+    container.appendChild(wishesDot);
+
+    const entryDots = entries.map((entry, i) => {
       const dot = document.createElement('button');
       dot.type = 'button';
       dot.className = 'dot';
       dot.classList.toggle('dot--locked', !!entry.locked);
-      dot.setAttribute('aria-label', entry.locked ? 'Trang ' + (i + 1) + ' (riêng tư)' : 'Trang ' + (i + 1));
-      dot.addEventListener('click', () => jump(i));
+      dot.setAttribute('aria-label', entry.locked ? 'Trang ' + (i + 2) + ' (riêng tư)' : 'Trang ' + (i + 2));
+      dot.addEventListener('click', () => jump(i + 1));
       container.appendChild(dot);
       return dot;
     });
+    dotEls = [wishesDot, ...entryDots];
   }
 
   // ---- navigation ----------------------------------------------------------
+  // The wishes wall is a permanent virtual page 0; entries fill virtual
+  // pages 1..entryPageCount (an empty book still reserves one page for the
+  // "no messages yet" empty state, mirroring the pre-wishes-wall behavior).
+  function getNavInfo(s) {
+    const hasEntries = s.entries.length > 0;
+    const entryPageCount = hasEntries ? s.entries.length : 1;
+    const totalPages = entryPageCount + 1;
+    const virtualIndex = s.view === 'wishes' ? 0 : s.index + 1;
+    return { hasEntries, totalPages, virtualIndex, isFirst: virtualIndex === 0, isLast: virtualIndex === totalPages - 1 };
+  }
+
   function openBook() { setState({ opened: true }); }
 
   function next() {
-    if (state.turning || state.index >= state.entries.length - 1) return;
+    if (state.turning || getNavInfo(state).isLast) return;
     setState({ turning: true, direction: 'next', phase: 'closing' });
     setTimeout(() => {
-      setState((s) => ({ index: s.index + 1, phase: 'opening' }));
+      setState((s) => (s.view === 'wishes'
+        ? { view: 'entries', index: 0, phase: 'opening' }
+        : { index: s.index + 1, phase: 'opening' }));
       setTimeout(() => setState({ turning: false, phase: 'idle' }), PHASE_MS);
     }, PHASE_MS);
   }
 
   function prev() {
-    if (state.turning || state.index <= 0) return;
+    if (state.turning || getNavInfo(state).isFirst) return;
     setState({ turning: true, direction: 'prev', phase: 'closing' });
     setTimeout(() => {
-      setState((s) => ({ index: s.index - 1, phase: 'opening' }));
+      setState((s) => (s.view === 'entries' && s.index === 0
+        ? { view: 'wishes', phase: 'opening' }
+        : { index: s.index - 1, phase: 'opening' }));
       setTimeout(() => setState({ turning: false, phase: 'idle' }), PHASE_MS);
     }, PHASE_MS);
   }
 
-  function jump(i) {
-    if (state.turning || i === state.index) return;
-    setState({ index: i });
+  function jump(virtualIndex) {
+    if (state.turning || virtualIndex === getNavInfo(state).virtualIndex) return;
+    if (virtualIndex === 0) setState({ view: 'wishes' });
+    else setState({ view: 'entries', index: virtualIndex - 1 });
   }
 
   // ---- password modal (unlock / change password) --------------------------
@@ -242,13 +279,36 @@
     });
   }
 
+  // ---- wishes wall (short, always-public farewell wishes) -------------------
+  function renderWishesWall(wishes) {
+    const wall = $('wishes-wall');
+    wall.innerHTML = '';
+    $('wishes-empty').hidden = wishes.length > 0;
+    wishes.forEach((wish, i) => {
+      const card = document.createElement('div');
+      card.className = 'wish-card';
+      card.style.setProperty('--tilt', i % 2 === 0 ? '-1.6deg' : '1.4deg');
+      card.style.background = TAPE_COLORS[i % TAPE_COLORS.length];
+
+      const text = document.createElement('p');
+      text.className = 'wish-card__text';
+      text.textContent = wish.text;
+      card.appendChild(text);
+
+      const name = document.createElement('p');
+      name.className = 'wish-card__name';
+      name.textContent = '— ' + wish.sender;
+      card.appendChild(name);
+
+      wall.appendChild(card);
+    });
+  }
+
   // ---- render ---------------------------------------------------------------
   function render() {
-    const { opened, index, phase, direction, entries, modal, unlocked, loading } = state;
-    const hasEntries = entries.length > 0;
-    const entry = hasEntries ? entries[index] : null;
-    const isFirst = index === 0;
-    const isLast = index >= entries.length - 1;
+    const { opened, view, index, phase, direction, entries, wishes, modal, unlocked, loading } = state;
+    const { hasEntries, totalPages, virtualIndex, isFirst, isLast } = getNavInfo(state);
+    const entry = view === 'entries' && hasEntries ? entries[index] : null;
 
     // Cover + book visibility
     $('cover-flip').style.transform = opened ? 'rotateY(-155deg)' : 'rotateY(0deg)';
@@ -258,10 +318,10 @@
     book.style.pointerEvents = opened ? 'auto' : 'none';
 
     // Left page
-    $('page-label').textContent = hasEntries ? String(index + 1) : '0';
-    $('total-label').textContent = String(entries.length);
+    $('page-label').textContent = String(virtualIndex + 1);
+    $('total-label').textContent = String(totalPages);
     dotEls.forEach((dot, i) => {
-      dot.style.background = i === index ? 'oklch(48% 0.1 28)' : 'oklch(75% 0.03 50)';
+      dot.style.background = i === virtualIndex ? 'oklch(48% 0.1 28)' : 'oklch(75% 0.03 50)';
     });
 
     // Edit-mode admin controls
@@ -299,12 +359,15 @@
     underShadow.style.opacity = String(underShadowOpacity);
     underShadow.style.transition = transition;
 
-    // Right leaf — empty state vs. content
-    $('empty-state').hidden = hasEntries || loading;
-    $('empty-state-add').hidden = !unlocked;
-    $('leaf-content').hidden = !hasEntries;
+    // Right leaf — wishes wall (permanent first page) vs. entries content
+    $('wishes-page').hidden = view !== 'wishes';
+    if (view === 'wishes') renderWishesWall(wishes);
 
-    if (hasEntries) {
+    $('empty-state').hidden = view !== 'entries' || hasEntries || loading;
+    $('empty-state-add').hidden = !unlocked;
+    $('leaf-content').hidden = view !== 'entries' || !hasEntries;
+
+    if (view === 'entries' && hasEntries) {
       $('tape').style.background = TAPE_COLORS[index % TAPE_COLORS.length];
 
       const dateStamp = $('date-stamp');
@@ -334,8 +397,8 @@
     }
 
     // Nav buttons
-    $('btn-prev').disabled = isFirst || !hasEntries;
-    $('btn-next').disabled = isLast || !hasEntries;
+    $('btn-prev').disabled = isFirst;
+    $('btn-next').disabled = isLast;
 
     // Password modal
     $('modal-scrim').hidden = !modal;
@@ -412,4 +475,5 @@
 
   render();
   loadEntries();
+  loadWishes();
 })();

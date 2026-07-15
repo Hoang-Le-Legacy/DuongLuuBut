@@ -25,6 +25,7 @@
     sender: $('contribute-sender'),
     date: $('contribute-date'),
     message: $('contribute-message'),
+    wish: $('contribute-wish'),
     grid: $('contribute-photo-grid'),
     fileInput: $('contribute-photo-input'),
     status: $('contribute-photo-status'),
@@ -142,6 +143,7 @@
     els.sender.value = '';
     els.date.value = '';
     els.message.value = '';
+    els.wish.value = '';
     photos = [];
     renderPhotoGrid();
     setError('');
@@ -151,6 +153,7 @@
   async function submit() {
     const sender = els.sender.value.trim();
     const message = els.message.value.trim();
+    const wish = els.wish.value.trim();
     if (!sender) return setError('Cần điền tên của bạn.');
     if (!message) return setError('Cần viết lời nhắn.');
     if (uploadingCount > 0) return setError('Đợi ảnh tải xong nhé.');
@@ -167,6 +170,16 @@
     setError('');
     try {
       await API.submitContribution(payload);
+      // Best-effort: the wish is a separate, always-public content type from
+      // the entry above — a failure here shouldn't undo the message that
+      // already saved successfully.
+      if (wish) {
+        try {
+          await API.submitWish({ token, sender, text: wish });
+        } catch (err) {
+          /* entry already saved; wish can be added another time */
+        }
+      }
       els.form.hidden = true;
       els.success.hidden = false;
     } catch (err) {

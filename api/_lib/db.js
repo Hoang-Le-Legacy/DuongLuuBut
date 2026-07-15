@@ -172,6 +172,21 @@ async function deleteEntry(id) {
   return { removedPathnames: images.map((r) => r.pathname) };
 }
 
+function toWishDTO(row) {
+  return { id: row.id, sender: row.sender, text: row.text, createdAt: row.created_at };
+}
+
+async function listWishes() {
+  const rows = await sql`select * from wishes order by position asc, created_at asc`;
+  return rows.map(toWishDTO);
+}
+
+async function createWish(data) {
+  const id = crypto.randomUUID();
+  await sql`insert into wishes (id, sender, text) values (${id}, ${data.sender}, ${data.text})`;
+  return { id };
+}
+
 async function getSetting(key) {
   const rows = await sql`select value from settings where key = ${key}`;
   return rows[0] ? rows[0].value : null;
@@ -191,6 +206,8 @@ module.exports = {
   createEntry,
   updateEntry,
   deleteEntry,
+  listWishes,
+  createWish,
   getSetting,
   setSetting
 };

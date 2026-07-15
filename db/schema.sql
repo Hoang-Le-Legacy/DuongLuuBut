@@ -33,3 +33,14 @@ create table if not exists settings (
   key   text primary key,
   value text not null
 );
+
+-- Short, always-public farewell wishes ("wedding-wishes"-style wall) — a
+-- separate, lighter-weight content type from `entries`: no privacy toggle,
+-- no photos, capped short text. Submitted via the same contribute-link flow.
+create table if not exists wishes (
+  id         uuid primary key default gen_random_uuid(),
+  sender     text not null,
+  text       text not null,
+  position   integer not null default 0,
+  created_at timestamptz not null default now()
+);

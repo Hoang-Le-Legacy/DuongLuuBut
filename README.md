@@ -26,6 +26,12 @@ real database so Dương can curate it live from the site itself.
   5 photos. Contributions go live immediately as **private** entries (only
   Dương can see them until he edits one to make it public); the link can be
   regenerated or revoked anytime, which invalidates all copies of it at once.
+- **Wishes wall.** The book always opens to a permanent first page — a
+  wedding-guestbook-style wall of very short (≤120 char), always-**public**
+  farewell wishes, separate from the full messages above. Anyone with the
+  same contribute link can add one from an optional field at the bottom of
+  `contribute.html`; unlike full messages, wishes go public immediately with
+  no private-review step.
 
 ## Project structure
 
@@ -41,6 +47,7 @@ contribute.html         Standalone "write for Dương" page (shared link, no pas
 js/contribute.js        Controller for contribute.html (token check, form, photo grid)
 api/entries/index.js    GET (list) / POST (create)
 api/entries/[id].js     PATCH (update) / DELETE
+api/wishes/index.js     GET (public list) / POST (guest submits a short wish)
 api/upload.js           POST — downscaled photo → Vercel Blob (private)
 api/photo.js            GET — streams a photo out of the private Blob store
 api/unlock.js            POST — password → signed unlock token
@@ -48,7 +55,7 @@ api/password.js          POST — change password (requires a valid token)
 api/contribute.js        GET (check token) / POST (guest submits a message)
 api/contribute-link.js   GET/POST/DELETE — admin manages the shareable link
 api/_lib/                db.js, auth.js, validate.js, respond.js, shareToken.js
-db/schema.sql            Postgres schema (entries, entry_images, settings)
+db/schema.sql            Postgres schema (entries, entry_images, wishes, settings)
 scripts/migrate.js       Applies db/schema.sql + seeds the initial password hash
 design/                  Original Claude design component, for reference
 ```
@@ -129,6 +136,10 @@ reading the existing book) to submit a message and up to 5 photos.
   a `401` on all of them.
 - `GET /api/entries` filters private entries server-side — an
   unauthenticated request never receives their `message`/`sender`/photos.
+- `GET /api/wishes` has no auth check at all — wishes have no private state,
+  by design (the wall is meant to be public from the moment it's posted).
+  `POST /api/wishes` is still gated by the same contribute-link token as
+  full messages, so only link-holders can write to it.
 - Photos live in a **private** Blob store; `api/photo.js` is the only thing
   that can read it (via the server's `BLOB_READ_WRITE_TOKEN`/OIDC), and
   streams bytes back without its own auth check — by the time a client has a

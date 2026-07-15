@@ -133,6 +133,15 @@
     return request('/api/contribute', { method: 'POST', body: payload });
   }
 
+  // ---- wishes wall (short, always-public farewell wishes) -----------------
+  function fetchWishes() {
+    return request('/api/wishes');
+  }
+
+  function submitWish(payload) {
+    return request('/api/wishes', { method: 'POST', body: payload });
+  }
+
   // ---- date formatting -------------------------------------------------
   // The API speaks ISO (`yyyy-mm-dd`, matching <input type="date">); the
   // book's date-stamp badge shows `mm-dd-yy` per the design.
@@ -222,6 +231,8 @@
     revokeContributeLink,
     checkContributeToken,
     submitContribution,
-    uploadContributionImage
+    uploadContributionImage,
+    fetchWishes,
+    submitWish
   };
 })();
