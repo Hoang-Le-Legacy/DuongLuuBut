@@ -961,7 +961,7 @@ a:hover { color: oklch(38% 0.16 30); }
 
 /* ---- contribute.html (standalone "write for Dương" page) ----------------- */
 .contribute-stage { height: auto; min-height: 100vh; padding: 32px 16px; }
-.contribute-card {
+.editor.contribute-card {
   width: min(440px, 100%);
   max-height: none;
   overflow-y: visible;
