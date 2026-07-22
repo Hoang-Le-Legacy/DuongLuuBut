@@ -14,7 +14,7 @@
 
   const $ = (id) => document.getElementById(id);
   const API = window.SLUUBUT_API;
-  const { MAX_IMAGES } = window.SLUUBUT_DATA;
+  const { MAX_IMAGES, TAPE_COLORS } = window.SLUUBUT_DATA;
 
   const token = new URLSearchParams(window.location.search).get('t') || '';
 
@@ -32,7 +32,14 @@
     error: $('contribute-error'),
     submit: $('contribute-submit'),
     success: $('contribute-success'),
-    again: $('contribute-again')
+    again: $('contribute-again'),
+    preview: $('contribute-preview'),
+    previewWishesWall: $('preview-wishes-wall'),
+    previewWishesEmpty: $('preview-wishes-empty'),
+    previewEntryTape: $('preview-entry-tape'),
+    previewEntryPhotos: $('preview-entry-photos'),
+    previewEntryMessage: $('preview-entry-message'),
+    previewEntryName: $('preview-entry-name')
   };
 
   let photos = []; // [{ url, pathname, position }]
@@ -139,6 +146,61 @@
     setStatus(uploadingCount > 0 ? `Đang tải ${uploadingCount} ảnh…` : '');
   }
 
+  // ---- post-submit preview: "how Dương sees it" (own entry + the public
+  // wishes wall). Mirrors app.js's renderWishesWall — kept as its own copy
+  // for the same reason as the photo grid above (separate trust boundary).
+  function renderPreviewWishesWall(wishes) {
+    els.previewWishesWall.innerHTML = '';
+    els.previewWishesEmpty.hidden = wishes.length > 0;
+    wishes.forEach((wish, i) => {
+      const card = document.createElement('div');
+      card.className = 'wish-card';
+      card.style.setProperty('--tilt', i % 2 === 0 ? '-1.6deg' : '1.4deg');
+      card.style.background = TAPE_COLORS[i % TAPE_COLORS.length];
+
+      const text = document.createElement('p');
+      text.className = 'wish-card__text';
+      text.textContent = wish.text;
+      card.appendChild(text);
+
+      const name = document.createElement('p');
+      name.className = 'wish-card__name';
+      name.textContent = '— ' + wish.sender;
+      card.appendChild(name);
+
+      els.previewWishesWall.appendChild(card);
+    });
+  }
+
+  function renderPreviewEntry(sender, message, entryPhotos) {
+    els.previewEntryTape.style.background = TAPE_COLORS[0];
+    els.previewEntryMessage.textContent = message;
+    els.previewEntryName.textContent = '— ' + sender;
+
+    els.previewEntryPhotos.innerHTML = '';
+    els.previewEntryPhotos.hidden = entryPhotos.length === 0;
+    entryPhotos.forEach((photo) => {
+      const tile = document.createElement('div');
+      tile.className = 'thumb';
+      const img = document.createElement('img');
+      img.src = photo.url;
+      img.alt = '';
+      tile.appendChild(img);
+      els.previewEntryPhotos.appendChild(tile);
+    });
+  }
+
+  async function showPreview(sender, message, entryPhotos) {
+    renderPreviewEntry(sender, message, entryPhotos);
+    try {
+      const data = await API.fetchWishes();
+      renderPreviewWishesWall(data.wishes || []);
+    } catch (err) {
+      renderPreviewWishesWall([]);
+    }
+    els.preview.hidden = false;
+  }
+
   function resetForm() {
     els.sender.value = '';
     els.date.value = '';
@@ -148,6 +210,7 @@
     renderPhotoGrid();
     setError('');
     setStatus('');
+    els.preview.hidden = true;
   }
 
   async function submit() {
@@ -182,6 +245,7 @@
       }
       els.form.hidden = true;
       els.success.hidden = false;
+      showPreview(sender, message, photos);
     } catch (err) {
       if (err && err.status === 401) {
         setError('Liên kết này đã bị thu hồi.');
