@@ -95,32 +95,98 @@
         <div class="contribute-success__icon">🎉</div>
         <p>Đã gửi! Cảm ơn bạn đã viết cho Dương 💌</p>
         <p class="contribute-success__signoff">Love y'all 🫡 See you later.</p>
-
-        <div class="contribute-preview" id="contribute-preview" hidden>
-          <p class="preview-heading">Đây là trang của bạn trong sổ, y như Dương sẽ thấy 👀</p>
-
-          <div class="preview-page">
-            <div class="preview-page__tape"></div>
-            <div class="preview-page__kicker">Lời Chúc Chia Tay 💌</div>
-            <p class="preview-page__desc">Những lời chúc thật ngắn từ mọi người.</p>
-            <div class="wishes-wall" id="preview-wishes-wall"></div>
-            <div class="wishes-empty" id="preview-wishes-empty" hidden>Chưa có lời chúc nào — hãy là người đầu tiên nhé! 💌</div>
-          </div>
-
-          <div class="preview-page" id="preview-entry-page">
-            <div class="preview-page__tape" id="preview-entry-tape"></div>
-            <div class="photo-strip" id="preview-entry-photos" hidden></div>
-            <div class="message-block">
-              <div class="message" id="preview-entry-message"></div>
-              <div class="message-name" id="preview-entry-name"></div>
-            </div>
-          </div>
-        </div>
-
+        <button class="btn-primary" id="contribute-view-preview" type="button">👀 Xem trang của bạn trong sổ</button>
         <button class="btn-ghost" id="contribute-again" type="button">Viết thêm lời nhắn khác</button>
       </div>
     </div>
   </main>
+
+  <!-- ===== GUEST PREVIEW: full-screen replica of Dương's book, showing only
+       the public wishes wall + the message this guest just sent — no admin
+       chrome (no gear/add/share/lock/edit/delete), same open-the-cover flow. ===== -->
+  <div class="stage preview-overlay" id="preview-overlay" hidden>
+    <div class="ambient"></div>
+    <button class="preview-close" id="preview-close" type="button" aria-label="Đóng xem trước">✕ Đóng</button>
+
+    <div class="book" id="preview-book">
+      <div class="spread">
+        <div class="spine"></div>
+
+        <section class="page-left" aria-label="Bìa trong">
+          <div class="kicker">Sổ Lưu Bút &middot; 2026</div>
+          <h1 class="title">Dương "Domino" <span class="title__emoji">🚀</span></h1>
+          <p class="intro">You've been selected to participate in some old-school '90s yearbook nonsense.
+
+            Make me laugh, cry, or want to contact a lawyer. Go Rockets, hẹn gặp lại. 🚀</p>
+
+          <div class="meme-sticker">
+            <img class="meme-sticker__img" src="assets/unnamed.jpg" alt="Office Space meme: Yeaaahhhh, goodbye is not going to work for me">
+          </div>
+
+          <div class="page-meta">
+            <div class="page-num">Trang <span id="preview-page-label">1</span> / <span id="preview-total-label">2</span></div>
+            <div class="dots" id="preview-dots"></div>
+          </div>
+
+          <div class="logo-frame">
+            <img class="logo-mark" src="assets/logo.png" alt="University of Toledo Rockets logo" width="40" height="40">
+          </div>
+        </section>
+
+        <section class="page-right" aria-label="Lời nhắn">
+          <article class="leaf" id="preview-leaf">
+            <div class="wishes-page" id="preview-wishes-page">
+              <div class="wishes-page__tape"></div>
+              <div class="wishes-page__header">
+                <h2 class="wishes-page__title">Lời Chúc Chia Tay 💌</h2>
+                <p class="wishes-page__desc">Những lời chúc thật ngắn từ mọi người.</p>
+              </div>
+              <div class="wishes-wall" id="preview-wishes-wall"></div>
+              <div class="wishes-empty" id="preview-wishes-empty" hidden>Chưa có lời chúc nào — hãy là người đầu tiên nhé! 💌</div>
+            </div>
+
+            <div class="leaf-content" id="preview-leaf-content" hidden>
+              <div class="tape" id="preview-tape"></div>
+              <div class="photo-strip" id="preview-entry-photos" hidden></div>
+              <div class="message-block">
+                <div class="message" id="preview-entry-message"></div>
+                <div class="message-name" id="preview-entry-name"></div>
+              </div>
+            </div>
+
+            <div class="leaf-shadow" id="preview-leaf-shadow"></div>
+          </article>
+
+          <div class="under-shadow" id="preview-under-shadow"></div>
+        </section>
+      </div>
+
+      <nav class="nav" aria-label="Điều hướng trang">
+        <button class="nav-btn" id="preview-btn-prev" type="button">‹ Trước</button>
+        <button class="nav-btn" id="preview-btn-next" type="button">Tiếp ›</button>
+      </nav>
+    </div>
+
+    <div class="cover-wrap" id="preview-cover-wrap">
+      <div class="cover-flip" id="preview-cover-flip">
+        <div class="cover">
+          <div class="cover__tape cover__tape--left"></div>
+          <div class="cover__tape cover__tape--right"></div>
+          <div class="cover__ribbon"></div>
+
+          <img class="cover__wine" src="assets/wine.png" alt="" aria-hidden="true">
+          <img class="cover__glass" src="assets/glass.png" alt="" aria-hidden="true">
+
+          <div class="cover__rockets">🚀 Go Rockets 🚀</div>
+          <div class="cover__heading">SỔ LƯU BÚT</div>
+          <div class="cover__name">Dương "Domino"</div>
+          <div class="cover__sub">Since 2020 &middot; Gia đình thứ hai</div>
+
+          <button class="cover__open" id="preview-btn-open" type="button">Mở sổ ra ✨</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="js/data.js"></script>
   <script src="js/api.js"></script>

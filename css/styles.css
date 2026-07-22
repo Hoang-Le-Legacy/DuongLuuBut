@@ -1023,57 +1023,33 @@ a:hover { color: oklch(38% 0.16 30); }
   opacity: 0.85;
 }
 
-/* ---- guest preview (contribute.html, post-submit "how Dương sees it") ---- */
-.contribute-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-  margin-top: 4px;
+/* ---- guest preview (contribute.html, post-submit "how Dương sees it") ----
+   Full-screen replica of the real book (same .stage/.book/.cover-wrap
+   classes as index.html) so the guest gets the identical open-the-cover +
+   page-flip experience, scoped to just the 2 pages relevant to them: the
+   public wishes wall and their own just-submitted message. No admin chrome
+   is rendered into this markup at all (no gear/admin-bar/entry-controls). */
+.stage.preview-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
 }
-.preview-heading {
-  margin: 0;
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  color: var(--ink-soft);
-  text-align: center;
-}
-.preview-page {
-  position: relative;
-  border-radius: var(--radius-page);
-  background-color: var(--paper-right);
-  background-image: repeating-linear-gradient(to bottom,
-    transparent 0 30px, var(--rule) 30px 31px);
-  box-shadow: 0 14px 30px oklch(20% 0.03 40 / 0.22);
-  padding: 32px 20px 22px;
-  text-align: left;
-}
-.preview-page__tape {
+.preview-close {
   position: absolute;
-  top: 0;
-  left: 30px;
-  width: 62px;
-  height: 20px;
-  transform: rotate(-4deg);
-  background: oklch(78% 0.09 45 / 0.55);
-  box-shadow: 0 2px 5px oklch(30% 0.03 40 / 0.2);
+  top: 18px;
+  right: 18px;
+  z-index: 10;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  color: oklch(40% 0.03 40);
+  background: oklch(96% 0.01 60 / 0.95);
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px oklch(30% 0.03 40 / 0.15);
 }
-.preview-page__kicker {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 17px;
-  color: var(--ink-title);
-  margin-bottom: 4px;
-}
-.preview-page__desc {
-  margin: 0 0 12px;
-  font-size: 12px;
-  line-height: 1.5;
-  color: var(--ink-soft);
-}
-.preview-page #preview-entry-photos { margin: 6px 0 12px; }
-.preview-page .message-block { padding-bottom: 0; }
-.preview-page .message { max-height: 40vh; }
 
 /* ---- meme sticker (Dương's actual meme, index.html + contribute.html) ----- */
 .meme-sticker {
